@@ -44,17 +44,17 @@
 
       return (
         <div
-          className={`flex flex-col justify-self-center h-[100vh] w-[45rem] pt-12 gap-5 text-white ${
+          className={`flex flex-col justify-self-center max-h-[90vh] w-[45rem] gap-2 text-white ${
             currentWidth < 780 ? "w-[95%]" : "w-[45rem]"
           }`}
         >
-          <div className="flex-1 p-4 overflow-y-scroll overflow-x-hidden gap-2 custom-scrollbar rounded-2xl h-[80%]">
+          <div className="flex-1 p-4 overflow-y-scroll overflow-x-hidden gap-2 custom-scrollbar rounded-2xl max-h-[80%]">
         {messages.map((message) => (
           <div
             key={message.id}
             className={`p-2 rounded-lg mb-2 ${
               message.type === "user"
-                ? "text-black w-fit ml-auto"
+                ? "text-black w-fit ml-auto max-w-[80%]"
                 : "text-white w-fit"
             }`}
             style={message.type !== "user" ? { backgroundColor: "rgb(10,10,10)" } : {backgroundColor: "rgb(240,240,240)"}}
@@ -62,7 +62,7 @@
           {message.isLoading ? (
             <span className="flex items-center animate-pulse">
               <LuBrainCircuit className="text-xl opacity-75" />
-              <span className="ml-2">Thinking...</span>
+              <span className="ml-2">Thinking....</span>
             </span>
             ) : (
           <div>
@@ -90,7 +90,7 @@
         </div>
 
           {/* Chat Input Section */}
-          <div className="border-zinc-700 h-auto bg-zinc-800 text-white mb-4 rounded-2xl focus-within:ring-[1px]"
+          <div className="border-zinc-700 h-auto bg-zinc-800 text-white rounded-2xl focus-within:ring-[1px]"
            tabIndex="0">
             <div className="relative flex items-center pb-10">
               <textarea

@@ -13,7 +13,7 @@ function LeftSidebar({ isOpen, user }) {
 
   return (
     <div
-      className={`bg-zinc-900 z-50 h-full w-[20%] min-w-[18rem] fixed ${
+      className={`bg-zinc-900 z-50 h-full top-0 w-[20%] min-w-[18rem] fixed ${
         isOpen ? "left-0" : "-left-[450px]"
       } transition-all duration-300 ease-in-out`}
     >
@@ -36,6 +36,8 @@ function LeftSidebar({ isOpen, user }) {
             </p>
           </button>
         </div>
+
+        <p className="bg-zinc-600 h-[1px] w-full" ></p>
       </div>
      
       <div className="h-full mt-2 overflow-y-auto">
@@ -46,15 +48,18 @@ function LeftSidebar({ isOpen, user }) {
       ) : previousPrompt.length === 0 ? (
        <p className="text-gray-400 text-sm px-4">No previous chats</p>
       ) : (
-      previousPrompt.map((item, index) => (
-      <div
-        key={index}
-        className="px-4 py-2 cursor-pointer hover:bg-zinc-800"
-        onClick={() => loadPrompt(item)}
-      >
-        <p className="text-white text-sm">{item.slice(0, 20)}...</p>
-      </div>
-      ))
+        <>
+        <p className="text-gray-400 px-2 text-md">Recent chats</p>
+        {Array.isArray(previousPrompt) && previousPrompt.length > 0 ? (
+          previousPrompt.map((item, index) => (
+            <div key={index} className="px-2 py-2 cursor-pointer" onClick={() => loadPrompt(item)}> 
+              <p className="text-white text-sm px-2 py-1 rounded-md  hover:bg-zinc-700">{item.slice(0,40)}...</p>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500 px-2 text-sm">No recent chats</p>
+        )}
+      </>
     )}
     </div>
 

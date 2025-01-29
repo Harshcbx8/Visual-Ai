@@ -49,8 +49,8 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
       };
   return (
     <div
-      className={`z-50 fixed flex flex-nowrap justify-between items-center p-2 transition-all translate-x-0 duration-300 h-12 ${
-        isSideBarOpen ? 'w-[80%] right-0' : 'w-full'
+      className={`z-50 flex flex-nowrap justify-between items-center p-2 transition-all translate-x-0 duration-300 h-12 ${
+        isSideBarOpen ? 'w-[80%] ml-[20%]' : 'w-full'
       }`}
     >
       {/* Left Section */}
