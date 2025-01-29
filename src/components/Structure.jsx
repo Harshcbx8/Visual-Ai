@@ -44,7 +44,7 @@
 
       return (
         <div
-          className={`flex flex-col justify-self-center max-h-[90vh] w-[45rem] gap-2 text-white ${
+          className={`flex flex-col justify-self-center h-[90vh] w-[45rem] gap-2 text-white ${
             currentWidth < 780 ? "w-[95%]" : "w-[45rem]"
           }`}
         >
