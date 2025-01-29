@@ -1,0 +1,121 @@
+@import "tailwindcss";
+*{
+  box-sizing: border-box;
+}
+  /* Add this to your App.css or a relevant stylesheet */
+body {
+    width: 100%;
+    height: 100%;
+    background-color:rgb(10, 10, 10); 
+    color: white;
+    overflow: hidden;
+
+}
+.fixed {
+  position: fixed;
+}
+
+.z-50 {
+  z-index: 50;
+}
+.custom-toast {
+    max-width: 300px; /* Width */
+    max-height: 70px; /* Height */
+    padding: 10px 15px; /* Padding */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 14px; /* Font size */
+    text-align: center; /* Center-align text */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow */
+  }
+
+  .baloo-paaji-2-BaseFont1 {
+    font-family: "Baloo Paaji 2", serif;
+    font-optical-sizing: auto;
+    font-weight: auto;
+    font-style: normal;
+  }
+
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(45,45,45); /* Green thumb */
+  border-radius: 4px;
+}
+
+/* .custom-scrollbar::-webkit-scrollbar-track {
+  background-color: rgb(30, 30, 30);
+
+} */
+ 
+/* Define the container for the rows */
+.loading-container {
+  width: 100%;
+  height: 50px; /* Adjust height as needed */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between rows */
+  justify-content: center; /* Center vertically */
+  padding: 10px;
+}
+
+/* Style for each row */
+.loading-row {
+  width: 100%;
+  height: 8px; /* Row height */
+  /* background-color: black; */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Keyframes for the animation with varied starting and ending points */
+@keyframes loadingAnimation {
+  0% {
+    left: -150%; /* Start far from the left */
+    opacity: 0.2; /* Less opacity at the start */
+  }
+  25% {
+    opacity: 0.6; /* Slightly higher opacity */
+  }
+  50% {
+    left: 0%; /* Middle position */
+    opacity: 0.8; /* Full opacity */
+  }
+  75% {
+    opacity: 0.6; /* Gradually decrease opacity */
+  }
+  100% {
+    left: 150%; /* End far to the right */
+    opacity: 0.2; /* Less opacity at the end */
+  }
+}
+
+/* White bar that moves across each row */
+.loading-row .loading-bar {
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 80%; /* Adjust width of the moving bar */
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: loadingAnimation 1.5s infinite ease-in-out;
+  animation-delay: calc(var(--bar-index) * 0.2s); /* Stagger animation for each row */
+}
+
+/* Style for autofilled input */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  background-color: white !important; /* Change background color */
+  color: black !important; /* Change text color */
+  -webkit-text-fill-color: white !important; /* Ensure text color is applied */
+  transition: background-color 5000s ease-in-out 0s; /* Prevent background color from resetting */
+}
