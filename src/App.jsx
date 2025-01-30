@@ -5,7 +5,7 @@ import Structure from './components/Structure';
 import Header from './components/Header';
 import LeftSideBar from './components/LeftSIdeBar';
 import Auth from './components/Auth'; 
-// import TheVISAI from './components/TheVISAI';
+import TheVISAI from './components/TheVISAI';
 import { ToastContainer } from 'react-toastify';
 import { auth } from "./components/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -16,6 +16,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [isSideBarOpen, setSideBarOpen] = useState(false);
   const [isAuthOpen, setAuthOpen] = useState(false);
+  const [selectedModel, setSelectedModel] = useState("Gemini"); // State for model selection
 
   const sideBarRef = useRef(null);
 
@@ -82,6 +83,8 @@ function App() {
         Auth={toggleAuth}
         user={user}
         setUser={setUser}
+        selectedModel={selectedModel} // Pass state
+        setSelectedModel={setSelectedModel} // Pass setter function
       />
 
       {/* Sidebar */}
@@ -90,11 +93,14 @@ function App() {
       </div>
 
       {/* Auth */}
-      {(!user && !isAuthOpen) && <Auth closeAuth={toggleAuth} setUser={setUser} />}
+      {(!user && isAuthOpen) && <Auth closeAuth={toggleAuth} setUser={setUser} />}
 
       {/* Main Structure */}
       <Structure currentWidth={width} />
-      {/* <TheVISAI/> */}
+
+       {/* Conditionally Render TheVISAI */}
+       {selectedModel === "VISUAL-AI" && <TheVISAI />}
+
       {/* Toast Container */}
       <ToastContainer />
     </div>

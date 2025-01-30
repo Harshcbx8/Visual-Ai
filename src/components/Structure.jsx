@@ -1,9 +1,17 @@
-    import React, { useContext, useEffect, useRef } from "react";
+    import React, { useContext, useEffect, useRef, useState} from "react";
     import { RiAttachmentLine } from "react-icons/ri";
     import { IoMdArrowRoundUp } from "react-icons/io";
     import { Context } from "../context/Context";
     import { LuBrainCircuit } from "react-icons/lu";
     import { AiOutlineLoading } from "react-icons/ai";
+    import { MdThumbUp } from "react-icons/md";
+    import { MdThumbDown } from "react-icons/md";
+    import { HiSpeakerWave } from "react-icons/hi2";
+    import { HiSpeakerXMark } from "react-icons/hi2";
+    import { MdContentCopy } from "react-icons/md";
+    import { FaEdit } from "react-icons/fa";
+    import { RiRobot3Fill } from "react-icons/ri";
+
 
     export default function Structure({ currentWidth }) {
       const {
@@ -14,8 +22,11 @@
         messages,
         setMessages,
         isTyping,
+        regenerateResponse, 
+        editResponse, 
       } = useContext(Context);
 
+      const [isSpeaking, setIsSpeaking] = useState(false); // Track the speech state
       const messagesEndRef = useRef(null);
 
       useEffect(() => {
@@ -43,35 +54,89 @@
         await onSent(input); // Wait for onSent to process the response
       };
 
+      const handleCopy = (text) => {
+        navigator.clipboard.writeText(text);
+      };
+    
+      const handleTextToSpeech = (text) => {
+        if (isSpeaking) {
+          speechSynthesis.cancel(); // Stop the speech if it's already playing
+          setIsSpeaking(false);
+        } else {
+          const utterance = new SpeechSynthesisUtterance(text);
+          speechSynthesis.speak(utterance);
+          setIsSpeaking(true);
+    
+          // Listen for when speech ends and update state
+          utterance.onend = () => {
+            setIsSpeaking(false);
+          };
+        }
+      };
+
       return (
-        <div
-          className={`flex flex-col justify-self-center h-[90vh] w-[45rem] gap-2 text-white ${
-            currentWidth < 780 ? "w-[95%]" : "w-[45rem]"
-          }`}
-        >
-          <div className="flex-1 p-4 overflow-y-scroll overflow-x-hidden gap-2 custom-scrollbar rounded-2xl max-h-[80%]">
+        <div className={`flex flex-col justify-self-center h-[90vh] w-[45rem] gap-2 text-white ${currentWidth < 780 ? "w-[95%]" : "w-[45rem]"}`}>
+          <div className="flex-1 p-4 overflow-y-scroll overflow-x-hidden gap-2 custom-scrollbar rounded-2xl h-[100%]">
+
         {messages.map((message, index) => (
-          <div
-          key={message.id || `msg-${index}`}
-            className={`p-2 rounded-lg mb-2 ${
-              message.type === "user"
+          <div key={message.id || `msg-${index}`}
+            className={`p-2 rounded-lg mb-2 ${message.type === "user"
                 ? "text-black w-fit ml-auto max-w-[80%]"
                 : "text-white w-fit"
             }`}
-            style={message.type !== "user" ? { backgroundColor: "rgb(10,10,10)" } : {backgroundColor: "rgb(240,240,240)"}}
+            onMouseEnter={(e) => {
+              if (currentWidth > 520) {
+                e.currentTarget.querySelector(".icons-container").style.opacity = 1;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (currentWidth > 520) {
+                e.currentTarget.querySelector(".icons-container").style.opacity = 0;
+              }
+            }}
           >
           {message.isLoading ? (
-            <span className="flex items-center animate-pulse">
-              <LuBrainCircuit className="text-xl opacity-75" />
-              <span className="ml-2">Thinking....</span>
-            </span>
-            ) : (
-          <div>
-            {message.icon ? message.icon : <div dangerouslySetInnerHTML={{ __html: message.text }} />}
-          </div>
+              <span className="flex items-center animate-pulse">
+                <LuBrainCircuit className="text-xl opacity-75" />
+                <span className="ml-2">Thinking....</span>
+              </span>
+            ) : message.image ? (
+              <img src={message.image} alt="AI generated" className="w-full max-h-96 object-cover" />
+            ) : message.text? (
+              <div >
+                <div
+                  className={`${message.type === "user" ? "p-2 rounded-lg" : ""}`}
+                  style={{ backgroundColor: message.type !== "user" ? "rgb(10,10,10)" : "rgb(240,240,240)" }}
+                >
+                  {message.text}
+                </div>
+                <div
+                  className={`icons-container text-white flex gap-2 mt-2 ${currentWidth > 520 ? "opacity-0 transition-opacity duration-300" : "opacity-100"}`}
+                >
+                  <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => handleCopy(message.text)}>
+                    <MdContentCopy />
+                  </button>
+                  <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => editResponse(message.text)}>
+                    <FaEdit />
+                  </button>
+                  {message.type !== "user" && (
+                    <>
+                      <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => handleTextToSpeech(message.text)}>
+                        {isSpeaking ? <HiSpeakerXMark /> : <HiSpeakerWave />}
+                      </button>
+                      <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => alert("Liked!")}> <MdThumbUp /> </button>
+                      <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => alert("Disliked!")}> <MdThumbDown /> </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            ):(
+                <div>
+                {message.isBot && <RiRobot3Fill className="text-xl mr-2" />}
+                </div>
             )}
-            </div>
-          ))}
+          </div>
+        ))}
           
 
           {loading && (
@@ -113,14 +178,14 @@
               />
 
               <button
-                className="absolute left-2 bottom-2 p-2 rounded-lg h-8 w-8 bg-zinc-700 hover:bg-zinc-600 focus:outline-none"
+                className=" cursor-pointer absolute left-2 bottom-2 p-2 rounded-lg h-8 w-8 bg-zinc-700 hover:bg-zinc-600 focus:outline-none"
                 title="Attach Document"
               >
                 <RiAttachmentLine />
               </button>
 
               <button
-                className="absolute right-2 bottom-2 p-2 rounded-lg h-8 w-8 bg-zinc-700 hover:bg-zinc-600 focus:outline-none"
+                className="absolute right-2 bottom-2 p-2 rounded-lg h-8 w-8 bg-zinc-700 hover:bg-zinc-600 focus:outline-none cursor-pointer"
                 title="Send Message"
                 onClick={handleSendMessage}
                 disabled={isTyping || !input.trim()} // Disable while AI is typing

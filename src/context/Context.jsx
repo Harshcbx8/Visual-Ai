@@ -1,6 +1,5 @@
 import { createContext, useState } from "react";
 import run from "../config/gemini";
-import { RiRobot3Fill } from "react-icons/ri";
 
 
 export const Context = createContext();
@@ -14,6 +13,20 @@ const ContextProvider = (props) => {
   const [resultData, setResultData] = useState("");
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false); // Track if AI is typing
+
+  const regenerateResponse = async (currentMessage) => {
+    if (isTyping) return;
+    setLoading(true);
+    setIsTyping(true);
+    
+    // Regenerate the response by sending the prompt again
+    await onSent(currentMessage);
+  };
+
+  const editResponse = (currentMessage) => {
+    setInput(currentMessage);
+    setMessages((prev) => prev.filter((msg) => msg.text !== currentMessage)); // Remove the message being edited
+  };
 
   const newChats = () => {
     setLoading(false);
@@ -62,7 +75,7 @@ const ContextProvider = (props) => {
     setMessages((prev) => {
       
       const updatedMessages = prev.map((msg) =>
-        msg.isLoading ? { ...msg, icon: <RiRobot3Fill />, isLoading: false } : msg
+        msg.isLoading ? { ...msg, isLoading: false, isBot: true } : msg
       );
   
       return [
@@ -98,6 +111,8 @@ const ContextProvider = (props) => {
     previousPrompt,
     setPreviousPrompt,
     onSent,
+    regenerateResponse,
+    editResponse,
     setRecentPrompt,
     recentPrompt,
     showResult,

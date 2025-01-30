@@ -1,34 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import { auth, db } from './Firebase';
-import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { IoSettingsOutline } from "react-icons/io5";
-import { RiToolsLine } from "react-icons/ri";
-import { RiRobot3Line } from "react-icons/ri";
+import { RiToolsLine, RiRobot3Line } from "react-icons/ri";
 
-const Profile = ({getProfileImage}) =>{
+const Profile = () =>{
   
     const [userDetails, setUserDetails] = useState(null);
-
-    useEffect(() =>{
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if(user){
+  
+        // Fetch user details only once
+        useEffect(() => {
+            const fetchUserData = async () => {
+            const user = auth.currentUser;
+            if (user) {
                 const docRef = doc(db, "Users", user.uid);
                 const docSnap = await getDoc(docRef);
-    
-                if(docSnap.exists()){
-                    setUserDetails(docSnap.data());
-                     // Send profile image to parent component
-                    getProfileImage(docSnap.data().profileImage);
+                if (docSnap.exists()) {
+                setUserDetails(docSnap.data());
                 }
             }
-            else{
-                setUserDetails(null);
-            }
-        });
+            };
+            fetchUserData();
+        }, []);  // Empty dependency array to run only once
 
-        return () => unsubscribe();
-    }, [getProfileImage]);
        
     if (!userDetails) return (
         <div className="loading-container">
@@ -43,7 +37,7 @@ const Profile = ({getProfileImage}) =>{
          </div>
       );
       
-     const { name, email, profileImage } = userDetails;
+     const { name, email } = userDetails;
      
  return(
 
