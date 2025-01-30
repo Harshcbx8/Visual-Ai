@@ -19,8 +19,9 @@
       const messagesEndRef = useRef(null);
 
       useEffect(() => {
-        // Scroll to the bottom whenever messages update
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        setTimeout(() => {
+          messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
       }, [messages]);
 
       const handleSendMessage = async () => {
@@ -44,14 +45,14 @@
 
       return (
         <div
-          className={`flex flex-col justify-self-center max-h-[90vh] w-[45rem] gap-2 text-white ${
+          className={`flex flex-col justify-self-center h-[90vh] w-[45rem] gap-2 text-white ${
             currentWidth < 780 ? "w-[95%]" : "w-[45rem]"
           }`}
         >
           <div className="flex-1 p-4 overflow-y-scroll overflow-x-hidden gap-2 custom-scrollbar rounded-2xl max-h-[80%]">
-        {messages.map((message) => (
+        {messages.map((message, index) => (
           <div
-            key={message.id}
+          key={message.id || `msg-${index}`}
             className={`p-2 rounded-lg mb-2 ${
               message.type === "user"
                 ? "text-black w-fit ml-auto max-w-[80%]"
@@ -75,16 +76,14 @@
 
           {loading && (
             <div className="loading-container">
-              {[...Array(3)].map((_, index) => (
-              <div key={index} className="loading-row">
-                <div
-                className="loading-bar"
-                style={{ "--bar-index": index }}
-              ></div>
-                </div>
+            {[...Array(3)].map((_, index) => (
+             <div key={index} className="loading-row">
+             <div className="loading-bar" style={{ "--bar-index": index }}></div>
+              </div>
               ))}
-            </div>
-          )}
+             </div>
+            )}
+
           {/* Empty div for scrolling to bottom */}
           <div ref={messagesEndRef} />
         </div>
@@ -124,7 +123,7 @@
                 className="absolute right-2 bottom-2 p-2 rounded-lg h-8 w-8 bg-zinc-700 hover:bg-zinc-600 focus:outline-none"
                 title="Send Message"
                 onClick={handleSendMessage}
-                disabled={isTyping} // Disable while AI is typing
+                disabled={isTyping || !input.trim()} // Disable while AI is typing
               >
                 {isTyping ? <AiOutlineLoading className="animate-spin" /> : <IoMdArrowRoundUp />}
               </button>

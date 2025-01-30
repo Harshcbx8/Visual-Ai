@@ -3,7 +3,6 @@ import {
     HarmCategory,
     HarmBlockThreshold,
   } from "@google/generative-ai";
-  import process from 'process';
 
    // Access API key from environment variable
    const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
@@ -26,16 +25,25 @@ import {
     responseMimeType: "text/plain",
   };
   
-  async function run(prompt) {
-    const chatSession = model.startChat({
-      generationConfig,
-      history: [],
-    });
-  
-    const result = await chatSession.sendMessage(prompt);
-    // console.log(result.response.text());
-    return result.response.text();
+  async function run(prompt, retryCount = 3, delay = 2000) {
+    try {
+      const chatSession = model.startChat({ generationConfig, history: [] });
+      const result = await chatSession.sendMessage(prompt);
+      return result.response.text();
+    } catch (error) {
+      console.error("Error fetching response:", error);
+      
+      // Retry if 503 Service Unavailable
+      if (retryCount > 0 && error.message.includes("503")) {
+        console.log(`Retrying in ${delay / 1000} seconds...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        return run(prompt, retryCount - 1, delay * 2); // Exponential backoff
+      }
+      
+      return "Error: Unable to fetch data. Please try again later.";
+    }
   }
+  
   
   export default run;
   
