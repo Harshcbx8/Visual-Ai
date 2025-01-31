@@ -11,6 +11,8 @@
     import { MdContentCopy } from "react-icons/md";
     import { FaEdit } from "react-icons/fa";
     import { RiRobot3Fill } from "react-icons/ri";
+    import DOMPurify from "dompurify";
+
 
 
     export default function Structure({ currentWidth }) {
@@ -74,15 +76,45 @@
         }
       };
 
+      const renderMessageContent = (message) => {
+        // Sanitize the message to prevent XSS attacks
+        const sanitizedText = DOMPurify.sanitize(message.text);
+        
+        if (!sanitizedText) return null;
+      
+        // Check for code block syntax (``` or inline code ``)
+        // const isCodeBlock = /```.*```/s.test(sanitizedText) || /`.*`/.test(sanitizedText);
+      
+        return (
+          <div dangerouslySetInnerHTML={{ __html: sanitizedText }} />
+        );
+        // isCodeBlock ? (
+        //   <div className="rounded-lg bg-red-700 text-white relative ">
+        //     <pre className=" ">
+        //       <code dangerouslySetInnerHTML={{ __html: sanitizedText }} />
+        //     </pre>
+        //     <button
+        //       className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 p-2 rounded"
+        //       onClick={() => navigator.clipboard.writeText(message.text)}
+        //     >
+        //       <MdContentCopy />
+        //     </button>
+        //   </div>
+        // ) : 
+        
+      };
+      
+
       return (
-        <div className={`flex flex-col justify-self-center gap-2 text-white ${currentWidth < 780 ? "w-[95%] h-[85vh]" : "w-[45rem] h-[90vh]"}`}>
-          <div className="flex-1 p-4 overflow-y-scroll overflow-x-hidden gap-2 custom-scrollbar rounded-2xl h-[90%]">
+        <div className={`flex flex-col justify-self-center gap-2 text-white ${currentWidth < 780 ? "w-[95%] h-[88vh] mt-5 " : "w-[45rem] h-[90vh]"}`}>
+          <div className="flex-1 p-4 overflow-y-scroll gap-2 custom-scrollbar rounded-2xl overflow-x-hiddeen">
 
         {messages.map((message, index) => (
           <div key={message.id || `msg-${index}`}
             className={`p-2 rounded-lg mb-2 ${message.type === "user"
                 ? "text-black w-fit ml-auto max-w-[80%]"
-                : "text-white w-fit"
+                : "text-white w-fit max-w-[100%]"
+
             }`}
             onMouseEnter={(e) => {
               if (currentWidth > 520) {
@@ -102,14 +134,20 @@
               </span>
             ) : message.image ? (
               <img src={message.image} alt="AI generated" className="w-full max-h-96 object-cover" />
-            ) : message.text? (
+            ) : !message.text?(
+              <div>
+              {message.isBot && <RiRobot3Fill className="text-xl mr-2" />}
+              </div>
+          ):(
               <div >
                 <div
-                  className={`${message.type === "user" ? "p-2 rounded-lg" : ""}`}
+                  className={`${message.type === "user" ? "p-2 rounded-lg" : " overflow-x-scroll overflow-y-hidden custom-scrollbar-horizontal"}`}
                   style={{ backgroundColor: message.type !== "user" ? "rgb(10,10,10)" : "rgb(240,240,240)" }}
                 >
-                  {message.text}
+                  
+                {renderMessageContent(message)}
                 </div>
+                
                 <div
                   className={`icons-container text-white flex gap-2 mt-2 ${currentWidth > 520 ? "opacity-0 transition-opacity duration-300" : "opacity-100"}`}
                 >
@@ -130,10 +168,6 @@
                   )}
                 </div>
               </div>
-            ):(
-                <div>
-                {message.isBot && <RiRobot3Fill className="text-xl mr-2" />}
-                </div>
             )}
           </div>
         ))}

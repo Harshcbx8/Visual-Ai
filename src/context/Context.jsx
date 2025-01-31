@@ -23,6 +23,20 @@ const ContextProvider = (props) => {
     await onSent(currentMessage);
   };
 
+  const formatText = (text) => {
+    // Format **bold** text
+    text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  
+    // Format *italic* text
+    text = text.replace(/\*(.*?)\*/g, "<em>$1</em>");
+  
+    // Format new lines
+    text = text.replace(/\n/g, "<br>");
+  
+    return text;
+  };
+  
+
   const editResponse = (currentMessage) => {
     setInput(currentMessage);
     setMessages((prev) => prev.filter((msg) => msg.text !== currentMessage)); // Remove the message being edited
@@ -64,12 +78,14 @@ const ContextProvider = (props) => {
       return updatedPrompts.slice(0, 20); // Keep only the most recent 20 prompts
     });
   
-    // Format response with line breaks and bold tags
-    const formattedResponse = response
-      .split("**")
-      .map((chunk, i) => (i % 2 === 1 ? `<b>${chunk}</b>` : chunk))
-      .join("")
-      .replace(/\*/g, "<br>");
+     // 1. Handle Code Blocks First
+     let formattedResponse = response.replace(/```(\w+)?\n([\s\S]+?)```/g, (match, lang, code) => {
+      // Wrap the code block in a div with a special class
+       return `<div class='code-block'><pre><code class='language-${lang || "plaintext"}'>${code}</code></pre></div>`;
+     });
+
+      // 2. Apply Text Formatting (bold, italic, new lines)
+      formattedResponse = formatText(formattedResponse);
   
     // Update messages to start the typing animation
     setMessages((prev) => {

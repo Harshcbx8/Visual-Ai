@@ -47,6 +47,14 @@ body {
   border-radius: 4px;
 }
 
+.custom-scrollbar-horizontal::-webkit-scrollbar {
+   height: 6px;
+}
+
+.custom-scrollbar-horizontal::-webkit-scrollbar-thumb {
+  background-color: rgb(45,45,45); /* Green thumb */
+  border-radius: 4px;
+}
 /* .custom-scrollbar::-webkit-scrollbar-track {
   background-color: rgb(30, 30, 30);
 
