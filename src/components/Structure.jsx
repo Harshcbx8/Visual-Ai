@@ -106,7 +106,7 @@
       
 
       return (
-        <div className={`flex flex-col justify-self-center gap-2 text-white ${currentWidth < 780 ? "w-[95%] h-[88vh] mt-5 " : "w-[45rem] h-[90vh]"}`}>
+        <div className={`flex flex-col justify-self-center gap-2 text-white ${currentWidth < 780 ? "w-[95%] h-[85vh] mt-10 " : "w-[45rem] h-[90vh]"}`}>
           <div className="flex-1 p-4 overflow-y-scroll gap-2 custom-scrollbar rounded-2xl overflow-x-hiddeen">
 
         {messages.map((message, index) => (
