@@ -105,7 +105,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
       <div className="flex flex-nowrap w-auto gap-2 text-md">
         {/* Sidebar Toggle Button */}
         <button
-          className="w-auto h-auto border-[1px] border-zinc-800 rounded-lg px-2 pt-1 hover:bg-zinc-900"
+          className="cursor-pointer w-auto h-auto border-[1px] border-zinc-800 rounded-lg px-2 pt-1 hover:bg-zinc-900"
           onMouseLeave={() => setOnMenu(false)}
           onMouseEnter={() => setOnMenu(true)}
           onClick={onMenuClick}
@@ -121,7 +121,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
         {/* New Chat Button */}
         {!isSideBarOpen && (
           <button
-            className="w-auto h-auto border-[1px] border-zinc-800 rounded-lg px-2 pt-1 hover:bg-zinc-900"
+            className="cursor-pointer w-auto h-auto border-[1px] border-zinc-800 rounded-lg px-2 pt-1 hover:bg-zinc-900"
             onMouseEnter={() => setNewChat(true)}
             onMouseLeave={() => setNewChat(false)}
             onClick={() => newChats()}
@@ -137,7 +137,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
 
          {/* Dropdown Button */}
       <button
-        className="h-auto w-auto border-[1px] text-md border-zinc-800 rounded-md px-2 pt-1 flex gap-1 hover:bg-zinc-900"
+        className="cursor-pointer h-auto w-auto border-[1px] text-md border-zinc-800 rounded-md px-2 pt-1 flex gap-1 hover:bg-zinc-900"
         onClick={() => setDrop(!drop)}
       >
         <h2>{selectedModel}</h2>
@@ -157,7 +157,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
           {models.map((model, index) => (
             <button
               key={index}
-              className={`flex items-center flex-row justify-between gap-2 text-white py-1 px-2 rounded-md ${
+              className={`cursor-pointer flex items-center flex-row justify-between gap-2 text-white py-1 px-2 rounded-md ${
                 selectedModel === model.name
                   ? "bg-zinc-900"
                   : "hover:bg-zinc-700"
@@ -214,7 +214,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
             <div>
               <Profile />
               <button
-                className="text-sm border-[1px] border-zinc-700 bg-zinc-700 h-auto w-full px-3 py-1 rounded-md hover:bg-zinc-800 transition duration-300"
+                className="cursor-pointer text-sm border-[1px] border-zinc-700 bg-zinc-700 h-auto w-full px-3 py-1 rounded-md hover:bg-zinc-800 transition duration-300"
                 onClick={handleLogout}
               >
                 Logout
