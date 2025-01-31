@@ -75,26 +75,12 @@
       };
 
       return (
-<<<<<<< HEAD
         <div className={`flex flex-col justify-self-center h-[90vh] w-[45rem] gap-2 text-white ${currentWidth < 780 ? "w-[95%]" : "w-[45rem]"}`}>
           <div className="flex-1 p-4 overflow-y-scroll overflow-x-hidden gap-2 custom-scrollbar rounded-2xl h-[100%]">
 
         {messages.map((message, index) => (
           <div key={message.id || `msg-${index}`}
             className={`p-2 rounded-lg mb-2 ${message.type === "user"
-=======
-        <div
-          className={`flex flex-col justify-self-center h-[85vh] w-[45rem] gap-2 text-white ${
-            currentWidth < 780 ? "w-[95%]" : "w-[45rem]"
-          }`}
-        >
-          <div className="flex-1 p-4 overflow-y-scroll overflow-x-hidden gap-2 custom-scrollbar rounded-2xl h-[80%]">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`p-2 rounded-lg mb-2 ${
-              message.type === "user"
->>>>>>> 3268bbceff81d6849a7e0246d2100753535ebf0e
                 ? "text-black w-fit ml-auto max-w-[80%]"
                 : "text-white w-fit"
             }`}
