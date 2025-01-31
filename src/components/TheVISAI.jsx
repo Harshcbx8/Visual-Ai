@@ -1,24 +1,22 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import Lightning from './Lightning';
 import * as THREE from 'three';
-import { useMemo } from 'react';
 
-const Globe = ({ color }) => {
+const Globe = () => {
   const globeRef = useRef();
 
   // Rotate the globe continuously
   useFrame(() => {
     if (globeRef.current) {
-      globeRef.current.rotation.y += 0.1;
+      globeRef.current.rotation.y += 0.02;
     }
   });
 
   return (
     <mesh ref={globeRef}>
       <sphereGeometry args={[0.6, 64, 64]} />
-      {/* Custom gradient material */}
       <shaderMaterial
         attach="material"
         uniforms={{
@@ -39,7 +37,7 @@ const Globe = ({ color }) => {
           uniform vec3 color2;
           uniform vec3 color3;
           void main() {
-            float height = (vPosition.y + 0.6) / 1.2; // Normalize height between 0 and 1
+            float height = (vPosition.y + 0.6) / 1.2;
             vec3 gradient = mix(color1, color2, height);
             gradient = mix(gradient, color3, smoothstep(0.3, 0.8, height));
             gl_FragColor = vec4(gradient, 1.0);
@@ -50,104 +48,78 @@ const Globe = ({ color }) => {
   );
 };
 
-const Particles = () => {
-  const groupRef = useRef();
-
-  // Wrap particleColors in useMemo to prevent re-initialization
-  const particleColors = useMemo(
-    () => ['aqua', 'cyan', 'gold', 'white'],
-    []
-  );
-
-  // Generate particles with useMemo
-  const particles = useMemo(() => {
-    return Array.from({ length: 50 }, () => ({
-      position: new THREE.Vector3(
-        (Math.random() - 0.5) * 2,
-        (Math.random() - 0.5) * 2,
-        (Math.random() - 0.5) * 2
-      ),
-      speed: Math.random() * 0.02,
-      color: new THREE.Color(particleColors[Math.floor(Math.random() * particleColors.length)]),
-    }));
-  }, [particleColors]);
-
-  // Update particle movement
-  useFrame(() => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += 0.015; // Rotation speed
-
-      particles.forEach((particle) => {
-        particle.position.y += particle.speed;
-        if (particle.position.y > 1) {
-          particle.position.y = -1; // Reset particle position
-        }
-      });
-    }
-  });
-
-  return (
-    <group ref={groupRef}>
-      {particles.map((particle, index) => (
-        <mesh key={index} position={particle.position}>
-          <sphereGeometry args={[0.015, 16, 16]} />
-           <meshBasicMaterial
-                color={particle.color}
-                side={THREE.DoubleSide}
-                opacity={0.8}
-            />
-        </mesh>
-      ))}
-    </group>
-  );
-};
-
-
-
 const TheVISAI = () => {
-  const [color] = useState(new THREE.Color('aqua'));
+  const containerRef = useRef(null);
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
 
+  useEffect(() => {
+    const handleMove = (e) => {
+      if (!isDragging) return;
 
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-     // Handle mouse/touch events
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    dragStartRef.current = { x: e.clientX, y: e.clientY };
-  };
+      let newX = position.x + (clientX - dragStartRef.current.x);
+      let newY = position.y + (clientY - dragStartRef.current.y);
 
-  const handleMouseMove = (e) => {
+      // Prevent going out of screen
+      const screenWidth = window.innerWidth - 300;
+      const screenHeight = window.innerHeight - 300;
+      newX = Math.max(0, Math.min(newX, screenWidth));
+      newY = Math.max(0, Math.min(newY, screenHeight));
+
+      setPosition({ x: newX, y: newY });
+      dragStartRef.current = { x: clientX, y: clientY };
+    };
+
+    const handleEnd = () => setIsDragging(false);
+
     if (isDragging) {
-      const deltaX = e.clientX - dragStartRef.current.x;
-      const deltaY = e.clientY - dragStartRef.current.y;
-      setPosition((prev) => ({
-        x: prev.x + deltaX,
-        y: prev.y + deltaY,
-      }));
-      dragStartRef.current = { x: e.clientX, y: e.clientY };
+      window.addEventListener('mousemove', handleMove);
+      window.addEventListener('mouseup', handleEnd);
+      window.addEventListener('touchmove', handleMove);
+      window.addEventListener('touchend', handleEnd);
     }
-  };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('touchend', handleEnd);
+    };
+  }, [isDragging, position]);
+
+  const handleStart = (e) => {
+    setIsDragging(true);
+    dragStartRef.current = {
+      x: e.touches ? e.touches[0].clientX : e.clientX,
+      y: e.touches ? e.touches[0].clientY : e.clientY,
+    };
   };
 
   return (
-    <div onMouseMove={handleMouseMove}
-     onMouseUp={handleMouseUp}
-     onMouseLeave={handleMouseUp} >
-      <div className="h-2 w-2" style={{position: 'absolute', top: position.y, left: position.x, cursor: isDragging ? 'grabbing' : 'grab',}} onMouseDown={handleMouseDown}>
-      <Canvas  camera={{ position: [3, 3, 3], fov: 50, }} style={{ width: '30rem', height: '30rem' }}>
+    <div
+      ref={containerRef}
+      style={{
+        position: 'absolute',
+        top: position.y,
+        left: position.x,
+        cursor: isDragging ? 'grabbing' : 'grab',
+        width: '300px',
+        height: '300px',
+      }}
+      onMouseDown={handleStart}
+      onTouchStart={handleStart}
+    >
+      <Canvas camera={{ position: [3, 3, 3], fov: 50 }} style={{ width: '100%', height: '100%' }}>
         <ambientLight intensity={0.3} />
         <pointLight position={[5, 5, 5]} intensity={1} />
-        <Globe color={color} scale={10} />
+        <Globe />
         <Lightning />
-        <Particles/>
-        <OrbitControls enableZoom={true}/>
+        <OrbitControls enableZoom={true} />
       </Canvas>
-    </div>
     </div>
   );
 };

@@ -8,8 +8,7 @@ body {
     height: 100%;
     background-color:rgb(10, 10, 10); 
     color: white;
-    overflow: hidden;
-
+    overflow:hidden;
 }
 .fixed {
   position: fixed;

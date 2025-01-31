@@ -24,6 +24,8 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
 
   const dropdownRef = useRef(null);
   const profileRef = useRef(null);
+  const dropdownButtonRef = useRef(null);
+  const profileButtonRef = useRef(null);
 
   const [profileImage, setProfileImage] = useState(null);  
   const [userDetails, setUserDetails] = useState(null);
@@ -49,28 +51,40 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
   useEffect(() => {
 
     const handleClickOutside = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        dropdownButtonRef.current &&
+        !dropdownButtonRef.current.contains(event.target)
+      ) {
+        setDrop(false);
+      }
+
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target) &&
+        profileButtonRef.current &&
+        !profileButtonRef.current.contains(event.target)
+      ) {
         setOpen(false);
       }
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDrop(false); // Close dropdown if clicked outside
-      }
+
     };
 
-    if (isOpen || drop) {
       document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, drop]);
+  }, []);
+
+   // Toggle dropdown menu
+   const toggleDropdown = () => {
+    setDrop((prev) => !prev);
+  };
 
   // Toggle profile dropdown
   const toggleProfile = () => {
-    setOpen(!isOpen);
+    setOpen((prev) => !prev);
   };
 
   // Logout function
@@ -137,8 +151,9 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
 
          {/* Dropdown Button */}
       <button
+        ref={dropdownButtonRef}
         className="cursor-pointer h-auto w-auto border-[1px] text-md border-zinc-800 rounded-md px-2 pt-1 flex gap-1 hover:bg-zinc-900"
-        onClick={() => setDrop(!drop)}
+        onClick={toggleDropdown}
       >
         <h2>{selectedModel}</h2>
         <div className="w-5 pt-0.5">
@@ -191,6 +206,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
 
       {/* Profile Section */}
       <button
+      ref={profileButtonRef}
         className={`w-auto text-sm cursor-pointer ${
           user
             ? 'rounded-full p-1 h-auto hover:bg-zinc-800'
