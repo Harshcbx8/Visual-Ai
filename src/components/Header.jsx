@@ -164,7 +164,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
        {/* Dropdown Menu */}
       {drop && (
         <div  ref={dropdownRef}
-          className="absolute flex flex-col w-auto mt-10 ml-[5.2rem] border-[1px] border-zinc-800 rounded-md px-1 gap-2 bg-black custom-scrollbar overflow-y-auto transition-all duration-300"
+          className="z-50 absolute flex flex-col w-auto mt-10 ml-[5.2rem] border-[1px] border-zinc-800 rounded-md px-1 gap-2 bg-black custom-scrollbar overflow-y-auto transition-all duration-300"
           style={{ maxHeight: "6rem",
               // background: "linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(20, 20, 20, 0.5) 100%)",
            }} 

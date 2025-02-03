@@ -32,9 +32,7 @@
       const messagesEndRef = useRef(null);
 
       useEffect(() => {
-        setTimeout(() => {
           messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-        }, 100);
       }, [messages]);
 
       const handleSendMessage = async () => {
@@ -188,7 +186,7 @@
         </div>
 
           {/* Chat Input Section */}
-          <div className="border-zinc-700 h-auto bg-zinc-800 text-white rounded-2xl focus-within:ring-[1px]"
+          <div className="border-zinc-700 h-auto bg-zinc-800 text-white rounded-2xl focus-within:ring-[1px] z-50"
            tabIndex="0">
             <div className="relative flex items-center pb-10">
               <textarea

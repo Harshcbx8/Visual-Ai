@@ -1,7 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import Lightning from './Lightning';
+import Lightning from './VISAI_Components/Lightning';
+import Particles from './VISAI_Components/Particles';
 import * as THREE from 'three';
 
 const Globe = () => {
@@ -10,7 +11,7 @@ const Globe = () => {
   // Rotate the globe continuously
   useFrame(() => {
     if (globeRef.current) {
-      globeRef.current.rotation.y += 0.02;
+      globeRef.current.rotation.y += 0.01;
     }
   });
 
@@ -47,6 +48,7 @@ const Globe = () => {
     </mesh>
   );
 };
+
 
 const TheVISAI = () => {
   const containerRef = useRef(null);
@@ -112,13 +114,16 @@ const TheVISAI = () => {
       }}
       onMouseDown={handleStart}
       onTouchStart={handleStart}
+
+      className="rounded-full w-fit h-fit "
     >
-      <Canvas camera={{ position: [3, 3, 3], fov: 50 }} style={{ width: '100%', height: '100%' }}>
+      <Canvas camera={{ position: [2, 2, 2], fov: 50 }} className=" rounded-full w-fit h-fit " >
         <ambientLight intensity={0.3} />
         <pointLight position={[5, 5, 5]} intensity={1} />
         <Globe />
         <Lightning />
-        <OrbitControls enableZoom={true} />
+        <Particles/>
+        <OrbitControls enableZoom={false} />
       </Canvas>
     </div>
   );

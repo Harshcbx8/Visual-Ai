@@ -29,4 +29,4 @@ setPersistence(auth, browserLocalPersistence)
     console.error("Error setting persistence:", error);
   });
   
-export default app;
+export default {app, db};

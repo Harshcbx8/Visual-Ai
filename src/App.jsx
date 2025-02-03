@@ -9,6 +9,7 @@ import TheVISAI from './components/TheVISAI';
 import { ToastContainer } from 'react-toastify';
 import { auth } from "./components/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import DefaultPage from './components/HomePages/DefaultPage';
 
 function App() {
 
@@ -89,14 +90,16 @@ function App() {
 
       {/* Sidebar */}
       <div ref={width < 780 ? sideBarRef : null}>
-        <LeftSideBar isOpen={isSideBarOpen} user={user} />
+        <LeftSideBar isOpen={isSideBarOpen}/>
       </div>
 
       {/* Auth */}
       {(!user && isAuthOpen) && <Auth closeAuth={toggleAuth} setUser={setUser} />}
 
       {/* Main Structure */}
-      <Structure currentWidth={width} />
+      <DefaultPage aiModel={selectedModel} width={width} />
+
+      <Structure currentWidth={width}/>
 
        {/* Conditionally Render TheVISAI */}
        {selectedModel === "VISUAL-AI" && <TheVISAI />}
