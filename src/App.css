@@ -13,21 +13,20 @@ body {
 .fixed {
   position: fixed;
 }
-
+.Toastify__toast--success,
+.Toastify__toast--error,
+.Toastify__toast--warning,
+.Toastify__toast--info {
+    background-color: black !important; /* Or white */
+    color: white !important; /* Or black */
+    border: 2px solid rgb(45,45,45);
+}
 .z-50 {
   z-index: 50;
 }
-.custom-toast {
-    background-color: white;
-    color: black;
-    max-width: 300px; /* Width */
-    max-height: 70px; /* Height */
-    padding: 10px 15px; /* Padding */
-    border-radius: 8px; /* Rounded corners */
-    font-size: 14px; /* Font size */
-    text-align: center; /* Center-align text */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Shadow */
-  }
+.z-99{
+  z-index: 99;
+}
 
   .baloo-paaji-2-BaseFont1 {
     font-family: "Baloo Paaji 2", serif;

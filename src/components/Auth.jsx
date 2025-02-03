@@ -8,6 +8,8 @@ import {setDoc, doc} from "firebase/firestore";
 import { toast } from 'react-toastify';
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
+import { TiTick } from "react-icons/ti";
+import { MdError } from "react-icons/md";
 
 
 const generateProfileImage = (name) => {
@@ -49,16 +51,18 @@ const Auth = ({setUser, closeAuth }) => {
 
       setUser(user);
       toast.success("Logged in with Google successfully!", {
-        className:"custom-toast",
         position: "top-center", // Position of the toast
         autoClose: 500, // Duration in milliseconds (5 seconds)
+        hideProgressBar: true, 
+        icon : <TiTick/>
       });
       closeAuth();
     } catch (error) {
       toast.error(error.message,{
-        className:"custom-toast",
         position: "bottom-center", // Position of the toast
         autoClose: 1000, // Duration in milliseconds (5 seconds)
+        hideProgressBar: true, 
+        icon: <MdError/>
       });
     }
   };
@@ -95,26 +99,29 @@ const Auth = ({setUser, closeAuth }) => {
 
         setUser(user);
         toast.success("User Sign-Up Successfully!",{
-          className:"custom-toast",
           position: "top-center", // Position of the toast
           autoClose: 500, // Duration in milliseconds (5 seconds)
+          hideProgressBar: true, 
+          icon : <TiTick/>
         });
       } else {
         // Login user
         const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
         setUser(userCredential.user);
         toast.success("User Logged-In Successfully!",{
-          className:"custom-toast",
           position: "top-center", // Position of the toast
           autoClose: 500, // Duration in milliseconds (5 seconds)
+          hideProgressBar: true, 
+          icon : <TiTick/>
         });
       }
       closeAuth();
     } catch (error) {
       toast.error(error.message,{
-        className:"custom-toast",
         position: "bottom-center", // Position of the toast
+        hideProgressBar: true, 
         autoClose: 1000, // Duration in milliseconds (5 seconds)
+        icon: <MdError/>
       });
     }
   };

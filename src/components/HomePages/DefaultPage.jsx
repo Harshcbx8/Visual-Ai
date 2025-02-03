@@ -97,16 +97,16 @@ export default function DefaultPage({ aiModel, width }) {
   );
 
   return (
-    <div className={`-z-10 absolute flex flex-col items-center justify-center w-full text-white p-8  ${width<520? "h-[65vh]": "h-[80vh]"}`}>
+    <div className={`-z-1 absolute flex flex-col items-center justify-center w-full text-white p-8  ${width<520? "h-[65vh]": "h-[80vh]"}`}>
       
       {visualFullForm} {/* Display the full form for VISUAL-AI model */}
       
       <motion.div
-        className={`grid  grid-cols-2 md:grid-cols-3 gap-6 self-center ${width<520? "w-[100%]" : "w-[80%]"}`}
+        className={`grid grid-cols-2 md:grid-cols-3 gap-6 self-center ${width<520? "w-[100%]" : "w-[80%]"}`}
         key={aiModel}  // Ensures re-animation when model changes
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 40 }}
+        exit={{ opacity: 0, y: 100 }}
         transition={{
           duration: 0.8,  // Slightly longer for smoother transition
           ease: "easeInOut",  // Smooth in-out easing for a fluid animation
@@ -115,22 +115,22 @@ export default function DefaultPage({ aiModel, width }) {
         {features.map((feature, index) => (
           <motion.div
             key={index}
-            className="rounded-2xl shadow-lg p-2 text-center hover:scale-105 hover:bg-zinc-900 transition-all duration-300"
-            initial={{ opacity: 0, y: 40 }}
+            className=" rounded-2xl shadow-lg p-2 text-center hover:scale-105 hover:bg-zinc-900 transition-all duration-300"
+            initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 40 }}
+            exit={{ opacity: 0, y: 100 }}
             transition={{
-                duration: 0.8,  // Ensures smooth transition
-                ease: "easeInOut",  // Smooth start and end animation
+                duration: 0.4,  // Ensures smooth transition
+                ease: "linear",  // Smooth start and end animation
                 delay: index * 0.1,  // Optional: adds a slight delay between features
             }}
           >
             <div className="flex justify-center mb-4 text-white">
               {feature.icon}
             </div>
-            <h2 className={`${width<520? "text-sm": "text-xl"} font-semibold mb-2`}>{feature.title}</h2>
+            <h2 className={`${width<901? "text-sm": "text-xl"} font-semibold mb-2`}>{feature.title}</h2>
             {/* Conditionally render the description based on width */}
-            {width > 520 && <p className="text-gray-400">{feature.description}</p>}
+            {width > 901 && <p className="text-gray-400">{feature.description}</p>}
           </motion.div>
         ))}
       </motion.div>

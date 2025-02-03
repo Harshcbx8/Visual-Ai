@@ -1,4 +1,5 @@
     import React, { useContext, useEffect, useRef, useState} from "react";
+    import { toast } from 'react-toastify';
     import { RiAttachmentLine } from "react-icons/ri";
     import { IoMdArrowRoundUp } from "react-icons/io";
     import { Context } from "../context/Context";
@@ -12,6 +13,8 @@
     import { FaEdit } from "react-icons/fa";
     import { RiRobot3Fill } from "react-icons/ri";
     import DOMPurify from "dompurify";
+    import { TiTick } from "react-icons/ti";
+    import { MdError } from "react-icons/md";
 
 
 
@@ -30,6 +33,7 @@
 
       const [isSpeaking, setIsSpeaking] = useState(false); // Track the speech state
       const messagesEndRef = useRef(null);
+      const [isHovered, setIsHovered] = useState(false); 
 
       useEffect(() => {
           messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -55,50 +59,76 @@
       };
 
       const handleCopy = (text) => {
-        navigator.clipboard.writeText(text);
+        navigator.clipboard.writeText(text)
+        .then(() => {
+          toast.success("Text copied to clipboard!", {
+            position: "bottom-right",
+            autoClose: 500, // 1 second duration
+            hideProgressBar: true, 
+            icon : <TiTick/>
+          });
+        })
+        .catch(err => {
+          toast.error("Failed to copy text", {
+            position: "bottom-right",
+            autoClose: 1000,
+            hideProgressBar: true, 
+            icon: <MdError/>
+          });
+          console.error("Copy failed:", err);
+        });
+    
+      };
+      const handleLike = () => {
+        toast.success("Liked!", {
+          position: "bottom-right",
+          autoClose: 500,
+          hideProgressBar: true,
+          icon: <MdThumbUp />,
+        });
+      };
+      
+      const handleDislike = () => {
+        toast.error("Disliked!", {
+          position: "bottom-right",
+          autoClose: 500,
+          hideProgressBar: true,
+          icon: <MdThumbDown />,
+        });
       };
     
       const handleTextToSpeech = (text) => {
+        // Create a temporary div to extract only visible text
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = DOMPurify.sanitize(text); // Sanitize input to prevent XSS
+        const visibleText = tempDiv.textContent || tempDiv.innerText; // Extract only visible text
+      
+        if (!visibleText.trim()) return; // Prevent speaking empty messages
+      
         if (isSpeaking) {
-          speechSynthesis.cancel(); // Stop the speech if it's already playing
+          speechSynthesis.cancel();
           setIsSpeaking(false);
         } else {
-          const utterance = new SpeechSynthesisUtterance(text);
+          const utterance = new SpeechSynthesisUtterance(visibleText);
           speechSynthesis.speak(utterance);
           setIsSpeaking(true);
-    
-          // Listen for when speech ends and update state
+          
           utterance.onend = () => {
             setIsSpeaking(false);
           };
         }
       };
+      
 
       const renderMessageContent = (message) => {
-        // Sanitize the message to prevent XSS attacks
         const sanitizedText = DOMPurify.sanitize(message.text);
         
         if (!sanitizedText) return null;
       
-        // Check for code block syntax (``` or inline code ``)
-        // const isCodeBlock = /```.*```/s.test(sanitizedText) || /`.*`/.test(sanitizedText);
-      
         return (
           <div dangerouslySetInnerHTML={{ __html: sanitizedText }} />
         );
-        // isCodeBlock ? (
-        //   <div className="rounded-lg bg-red-700 text-white relative ">
-        //     <pre className=" ">
-        //       <code dangerouslySetInnerHTML={{ __html: sanitizedText }} />
-        //     </pre>
-        //     <button
-        //       className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 p-2 rounded"
-        //       onClick={() => navigator.clipboard.writeText(message.text)}
-        //     >
-        //       <MdContentCopy />
-        //     </button>
-        //   </div>
-        // ) : 
+      
         
       };
       
@@ -149,7 +179,9 @@
                 <div
                   className={`icons-container text-white flex gap-2 mt-2 ${currentWidth > 520 ? "opacity-0 transition-opacity duration-300" : "opacity-100"}`}
                 >
-                  <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => handleCopy(message.text)}>
+                  <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => {
+                    handleCopy(message.text);
+                    }}>
                     <MdContentCopy />
                   </button>
                   <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => editResponse(message.text)}>
@@ -157,11 +189,16 @@
                   </button>
                   {message.type !== "user" && (
                     <>
-                      <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => handleTextToSpeech(message.text)}>
-                        {isSpeaking ? <HiSpeakerXMark /> : <HiSpeakerWave />}
+                       <button
+                        className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer"
+                        onClick={() => handleTextToSpeech(message.text)}
+                        onMouseEnter={() => setIsHovered(true)}  // Set hover state to true
+                        onMouseLeave={() => setIsHovered(false)} // Set hover state to false
+                      >
+                        {isSpeaking && isHovered ? <HiSpeakerXMark /> : <HiSpeakerWave />}
                       </button>
-                      <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => alert("Liked!")}> <MdThumbUp /> </button>
-                      <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => alert("Disliked!")}> <MdThumbDown /> </button>
+                      <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={handleLike}> <MdThumbUp /> </button>
+                      <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={handleDislike}> <MdThumbDown /> </button>
                     </>
                   )}
                 </div>

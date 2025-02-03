@@ -6,6 +6,8 @@ import { auth, db } from "./Firebase";
 import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { IoCheckmarkCircle } from "react-icons/io5";
+import { TiTick } from "react-icons/ti";
+import { MdError } from "react-icons/md";
 
 export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser, selectedModel, setSelectedModel, SetHome }) {
   const [isOpen, setOpen] = useState(false);
@@ -95,23 +97,24 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
         setUserDetails(null);
         setProfileImage(null);
         toast.success("Logged out successfully!", {
-          className: "custom-toast",
           position: "top-center",
           autoClose: 500,
+          hideProgressBar: true, 
+          icon : <TiTick/>
         });
       })
       .catch((error) => {
         toast.error(error.message, {
-          position: "bottom-center",
           className: "custom-toast",
           autoClose: 1000,
+          icon : <MdError/>
         });
       });
   };
 
   return (
     <div
-      className={`z-50 flex flex-nowrap justify-between items-center p-2 transition-all translate-x-0 duration-300 h-12 ${
+      className={`flex flex-nowrap justify-between items-center p-2 transition-all translate-x-0 duration-300 h-12 ${
         isSideBarOpen ? 'w-[80%] ml-[20%]' : 'w-full'
       }`}
     >
@@ -168,7 +171,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
        {/* Dropdown Menu */}
       {drop && (
         <div  ref={dropdownRef}
-          className="z-50 absolute flex flex-col w-auto mt-10 ml-[5.2rem] border-[1px] border-zinc-800 rounded-md px-1 gap-2 bg-black custom-scrollbar overflow-y-auto transition-all duration-300"
+          className="absolute flex flex-col w-auto mt-10 ml-[5.2rem] border-[1px] border-zinc-800 rounded-md px-1 gap-2 bg-black custom-scrollbar overflow-y-auto transition-all duration-300"
           style={{ maxHeight: "6rem",
               // background: "linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(20, 20, 20, 0.5) 100%)",
            }} 
@@ -184,6 +187,8 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
               onClick={() => {
                 setSelectedModel(model.name);
                 setDrop(false); // Close dropdown after selecting
+                newChats();
+                SetHome(true);
               }}
              
             >
