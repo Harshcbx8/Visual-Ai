@@ -15,7 +15,7 @@
 
 
 
-    export default function Structure({ currentWidth }) {
+    export default function Structure({ currentWidth, SetHome }) {
       const {
         onSent,
         loading,
@@ -186,7 +186,7 @@
         </div>
 
           {/* Chat Input Section */}
-          <div className="border-zinc-700 h-auto bg-zinc-800 text-white rounded-2xl focus-within:ring-[1px] z-50"
+          <div className="border-zinc-700 h-auto bg-zinc-800 text-white rounded-2xl focus-within:ring-[1px] "
            tabIndex="0">
             <div className="relative flex items-center pb-10">
               <textarea
@@ -205,6 +205,8 @@
                     if (currentWidth < 520) return; // Disable Enter on small screens
                     e.preventDefault();
                     handleSendMessage();
+                    SetHome(false);
+
                   }
                 }}
               />
@@ -219,7 +221,11 @@
               <button
                 className="absolute right-2 bottom-2 p-2 rounded-lg h-8 w-8 bg-zinc-700 hover:bg-zinc-600 focus:outline-none cursor-pointer"
                 title="Send Message"
-                onClick={handleSendMessage}
+                onClick={() => {
+                  handleSendMessage();
+                  SetHome(false)
+                }
+              }
                 disabled={isTyping || !input.trim()} // Disable while AI is typing
               >
                 {isTyping ? <AiOutlineLoading className="animate-spin" /> : <IoMdArrowRoundUp />}

@@ -7,7 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { IoCheckmarkCircle } from "react-icons/io5";
 
-export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser, selectedModel, setSelectedModel }) {
+export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser, selectedModel, setSelectedModel, SetHome }) {
   const [isOpen, setOpen] = useState(false);
   const [onMenu, setOnMenu] = useState(false);
   const [newChat, setNewChat] = useState(false);
@@ -138,7 +138,11 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
             className="cursor-pointer w-auto h-auto border-[1px] border-zinc-800 rounded-lg px-2 pt-1 hover:bg-zinc-900"
             onMouseEnter={() => setNewChat(true)}
             onMouseLeave={() => setNewChat(false)}
-            onClick={() => newChats()}
+            onClick={() => {
+              newChats(); 
+              SetHome(true);
+             } 
+            }
           >
             <i className="bx bx-plus"></i>
             <p className={`absolute w-auto h-auto border-[1px] border-zinc-800 rounded-md p-1 text-sm -translate-x-1 opacity-0 transition-all duration-300 ${

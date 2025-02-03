@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import React from "react";
 import { Context } from "../context/Context";
 
-function LeftSidebar({ isOpen, user }) {
+function LeftSidebar({ isOpen, user, SetHome }) {
   const [newChat, setNewChat] = useState(false);
   const { previousPrompt, setRecentPrompt, newChats, onSent } = useContext(Context);
 
@@ -22,7 +22,11 @@ function LeftSidebar({ isOpen, user }) {
           <h3 className="text-xl">Chatbot</h3>
           <button
             className="text-white w-auto rounded-md px-2 pt-1 hover:bg-zinc-800 cursor-pointer"
-            onClick={() => newChats()}
+            onClick={() => {
+              newChats();
+              SetHome(true);
+            }
+          }
             onMouseEnter={() => setNewChat(true)}
             onMouseLeave={() => setNewChat(false)}
           >

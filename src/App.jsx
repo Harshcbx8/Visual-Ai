@@ -12,7 +12,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import DefaultPage from './components/HomePages/DefaultPage';
 
 function App() {
-
+  const [home, SetHome] = useState(true);
   const [width, setWidth] = useState(window.innerWidth);
   const [user, setUser] = useState(null);
   const [isSideBarOpen, setSideBarOpen] = useState(false);
@@ -86,20 +86,21 @@ function App() {
         setUser={setUser}
         selectedModel={selectedModel} // Pass state
         setSelectedModel={setSelectedModel} // Pass setter function
+        SetHome={SetHome}
       />
 
       {/* Sidebar */}
       <div ref={width < 780 ? sideBarRef : null}>
-        <LeftSideBar isOpen={isSideBarOpen}/>
+        <LeftSideBar isOpen={isSideBarOpen}  SetHome={SetHome}/>
       </div>
 
       {/* Auth */}
       {(!user && isAuthOpen) && <Auth closeAuth={toggleAuth} setUser={setUser} />}
 
       {/* Main Structure */}
-      <DefaultPage aiModel={selectedModel} width={width} />
+      {home && <DefaultPage aiModel={selectedModel} width={width} />}
 
-      <Structure currentWidth={width}/>
+      <Structure currentWidth={width}  SetHome={SetHome}/>
 
        {/* Conditionally Render TheVISAI */}
        {selectedModel === "VISUAL-AI" && <TheVISAI />}
