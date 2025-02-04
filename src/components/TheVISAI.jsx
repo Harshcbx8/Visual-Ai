@@ -115,7 +115,7 @@ const TheVISAI = () => {
       onMouseDown={handleStart}
       onTouchStart={handleStart}
 
-      className="rounded-full w-fit h-fit "
+      className="rounded-full w-fit h-fit bg-red-200 "
     >
       <Canvas camera={{ position: [2, 2, 2], fov: 50 }} className=" rounded-full w-fit h-fit " >
         <ambientLight intensity={0.3} />

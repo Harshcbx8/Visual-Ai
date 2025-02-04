@@ -167,7 +167,7 @@
               {message.isBot && <RiRobot3Fill className="text-xl mr-2" />}
               </div>
           ):(
-              <div >
+              <div>
                 <div
                   className={`${message.type === "user" ? "p-2 rounded-lg" : " overflow-x-scroll overflow-y-hidden custom-scrollbar-horizontal"}`}
                   style={{ backgroundColor: message.type !== "user" ? "rgb(10,10,10)" : "rgb(240,240,240)" }}
