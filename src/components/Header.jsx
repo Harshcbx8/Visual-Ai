@@ -114,9 +114,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
 
   return (
     <div
-      className={`flex flex-nowrap justify-between items-center p-2 transition-all translate-x-0 duration-300 h-12 ${
-        isSideBarOpen ? 'w-[80%] ml-[20%]' : 'w-full'
-      }`}
+      className={`flex flex-nowrap justify-between items-center p-2 transition-all translate-x-0 duration-300 h-12 right-0`}
     >
       {/* Left Section */}
       <div className="flex flex-nowrap w-auto gap-2 text-md">

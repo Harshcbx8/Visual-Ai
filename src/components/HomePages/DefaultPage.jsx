@@ -23,10 +23,12 @@ import { SiKingstontechnology } from "react-icons/si";
 import { SiCodemagic } from "react-icons/si";
 import { BsRobot } from "react-icons/bs";
 import { TbDatabaseSearch } from "react-icons/tb";
+import { TbTopologyComplex } from "react-icons/tb";
+import { TbMessageBolt } from "react-icons/tb";
 
 
 
-export default function DefaultPage({ aiModel, width }) {
+export default function DefaultPage({ aiModel, width, isSideBarOpen }) {
   // AI Model-Specific Features
   const modelFeatures = {
     Gemini: [
@@ -69,14 +71,14 @@ export default function DefaultPage({ aiModel, width }) {
         { icon: <SiKingstontechnology size={30} />, title: "Knowledge Synthesis", description: "Combines data from various sources for intelligent responses" },
         { icon: <BsRobot size={30} />, title: "Advanced Dialogue", description: "Enables deep and sophisticated conversations with AI" },
         { icon: <FaRegImage size={30} />, title: "Image Analysis", description: "Analyzes and interprets images alongside text inputs" },
-        { icon: <FaBrain size={30} />, title: "Complex Problem Solving", description: "Solves multi-step problems efficiently" },
+        { icon: <TbTopologyComplex size={30} />, title: "Complex Problem Solving", description: "Solves multi-step problems efficiently" },
         { icon: <TbDatabaseSearch size={30} />, title: "Data Integration", description: "Integrates large datasets to generate insightful responses" },
     ],
 
     "Mistral-AI": [
         { icon: <SiWeightsandbiases size={30} />, title: "Lightweight AI", description: "Runs efficiently on low-resource environments" },
         { icon: <GiProcessor size={30} />, title: "Rapid Processing", description: "Processes inputs quickly with minimal computation" },
-        { icon: <FaCommentDots size={30} />, title: "Fast Conversation", description: "Enables quick and responsive conversations with minimal latency" },
+        { icon: <TbMessageBolt size={30} />, title: "Fast Conversation", description: "Enables quick and responsive conversations with minimal latency" },
         { icon: <FaCode size={30} />, title: "Code Interpretation", description: "Interprets and explains code effectively in different programming languages" },
         { icon: <TbLanguageHiragana size={30} />, title: "Multilingual Capability", description: "Supports several languages for global use" },
         { icon: <LiaChartAreaSolid size={30} />, title: "Efficient Data Analysis", description: "Analyzes large datasets in minimal time" },
@@ -87,28 +89,28 @@ export default function DefaultPage({ aiModel, width }) {
   const features = useMemo(() => modelFeatures[aiModel] || [], [aiModel]);
 
   // Full Form for VISUAL-AI
-  const visualFullForm = aiModel === "VISUAL-AI" && (
-    <div className="text-center mb-6">
-      <h2 className="text-2xl font-bold text-white">VISUAL</h2>
-      <p className="text-gray-400 text-lg">
-        <strong>Vast Interactive Simple User-friendly Application Language</strong>
-      </p>
-    </div>
-  );
+  // const visualFullForm = aiModel === "VISUAL-AI" && (
+  //   <div className="text-center mb-6">
+  //     <h2 className="text-2xl font-bold text-white">VISUAL</h2>
+  //     <p className="text-gray-400 text-lg">
+  //       <strong>Vast Interactive Simple User-friendly Application Language</strong>
+  //     </p>
+  //   </div>
+  // );
 
   return (
-    <div className={`-z-1 absolute flex flex-col items-center justify-center w-full text-white p-8  ${width<520? "h-[65vh]": "h-[80vh]"}`}>
+    <div className={`absolute  mt-[6rem] flex flex-col items-center justify-center  text-white p-8 transition-all duration-300  ${(isSideBarOpen && width>520)? "w-[80%]" : "w-full"} h-fit `}>
       
-      {visualFullForm} {/* Display the full form for VISUAL-AI model */}
+      {/* {visualFullForm} */}
       
       <motion.div
         className={`grid grid-cols-2 md:grid-cols-3 gap-6 self-center ${width<520? "w-[100%]" : "w-[80%]"}`}
         key={aiModel}  // Ensures re-animation when model changes
-        initial={{ opacity: 0, y: 100 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 100 }}
+        exit={{ opacity: 0, y: 40 }}
         transition={{
-          duration: 0.8,  // Slightly longer for smoother transition
+          duration: 0.6,  // Slightly longer for smoother transition
           ease: "easeInOut",  // Smooth in-out easing for a fluid animation
         }}
       >
@@ -116,13 +118,13 @@ export default function DefaultPage({ aiModel, width }) {
           <motion.div
             key={index}
             className=" rounded-2xl shadow-lg p-2 text-center hover:scale-105 hover:bg-zinc-900 transition-all duration-300"
-            initial={{ opacity: 0, y: 100 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 100 }}
+            exit={{ opacity: 0, y: 40 }}
             transition={{
                 duration: 0.4,  // Ensures smooth transition
                 ease: "linear",  // Smooth start and end animation
-                delay: index * 0.1,  // Optional: adds a slight delay between features
+                delay: index * 0.03,  // Optional: adds a slight delay between features
             }}
           >
             <div className="flex justify-center mb-4 text-white">

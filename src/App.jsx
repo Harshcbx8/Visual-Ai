@@ -76,7 +76,7 @@ function App() {
 
 
   return (
-    <div className="baloo-paaji-2-BaseFont1 transition-all ease-linear duration-300">
+    <div className={`baloo-paaji-2-BaseFont1 transition-all ease-linear duration-300 ${width > 520? (isSideBarOpen ? "w-[80%] ml-[20%] " : "w-[100%]") : ""}`}>
       {/* Header */}
       <Header
         onMenuClick={toggleSideBar}
@@ -89,6 +89,9 @@ function App() {
         SetHome={SetHome}
       />
 
+      
+      {home && <DefaultPage aiModel={selectedModel} width={width} isSideBarOpen={isSideBarOpen}/>}
+
       {/* Sidebar */}
       <div ref={width < 780 ? sideBarRef : null}>
         <LeftSideBar isOpen={isSideBarOpen}  SetHome={SetHome}/>
@@ -98,7 +101,6 @@ function App() {
       {(!user && isAuthOpen) && <Auth closeAuth={toggleAuth} setUser={setUser} />}
 
       {/* Main Structure */}
-      {home && <DefaultPage aiModel={selectedModel} width={width} />}
 
       <Structure currentWidth={width}  SetHome={SetHome}/>
 
