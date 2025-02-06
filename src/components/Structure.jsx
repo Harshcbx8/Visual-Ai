@@ -31,7 +31,6 @@
         editResponse, 
       } = useContext(Context);
 
-      const [isSpeaking, setIsSpeaking] = useState(false); // Track the speech state
       const messagesEndRef = useRef(null);
       const [isHovered, setIsHovered] = useState(false); 
 
@@ -97,29 +96,67 @@
         });
       };
     
-      const handleTextToSpeech = (text) => {
-        // Create a temporary div to extract only visible text
+      const [speakingMessageId, setSpeakingMessageId] = useState(null); // Track which message is speaking
+      const handleTextToSpeech = (text, messageId) => {
         const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = DOMPurify.sanitize(text); // Sanitize input to prevent XSS
-        const visibleText = tempDiv.textContent || tempDiv.innerText; // Extract only visible text
+        tempDiv.innerHTML = DOMPurify.sanitize(text);
+        const visibleText = tempDiv.textContent || tempDiv.innerText;
       
-        if (!visibleText.trim()) return; // Prevent speaking empty messages
+        if (!visibleText.trim()) return;
       
-        if (isSpeaking) {
+        if (speakingMessageId === messageId) {
           speechSynthesis.cancel();
-          setIsSpeaking(false);
-        } else {
-          const utterance = new SpeechSynthesisUtterance(visibleText);
-          speechSynthesis.speak(utterance);
-          setIsSpeaking(true);
-          
-          utterance.onend = () => {
-            setIsSpeaking(false);
-          };
+          setSpeakingMessageId(null);
+          return;
         }
+      
+        const detectedLang = detectLanguage(visibleText); // Detect language
+        let voices = speechSynthesis.getVoices();
+        let selectedVoice = selectVoice(voices, detectedLang);
+      
+        if (!selectedVoice) {
+          speechSynthesis.onvoiceschanged = () => {
+            voices = speechSynthesis.getVoices();
+            selectedVoice = selectVoice(voices, detectedLang);
+            speakText(visibleText, selectedVoice, messageId, detectedLang);
+          };
+          return;
+        }
+      
+        speakText(visibleText, selectedVoice, messageId, detectedLang);
       };
       
-
+      // Function to detect language (Basic Script Detection)
+      const detectLanguage = (text) => {
+        const hindiPattern = /[\u0900-\u097F]/; // Hindi Unicode Range
+        const englishPattern = /^[A-Za-z0-9.,!?'"() ]+$/; // English Characters
+        if (hindiPattern.test(text)) return "hi-IN";
+        if (englishPattern.test(text)) return "en-US";
+        return "hi-IN"; // Default to Hindi (Hinglish case)
+      };
+      
+      // Function to Select Appropriate Voice
+      const selectVoice = (voices, lang) => {
+        return voices.find((voice) => voice.lang.startsWith(lang)) || voices[0];
+      };
+      
+      // Function to Speak Text
+      const speakText = (text, voice, messageId, lang) => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        if (voice) utterance.voice = voice;
+      
+        utterance.lang = lang;
+        utterance.rate = 1;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+      
+        setSpeakingMessageId(messageId);
+        speechSynthesis.speak(utterance);
+      
+        utterance.onend = () => setSpeakingMessageId(null);
+      };
+      
+      
       const renderMessageContent = (message) => {
         const sanitizedText = DOMPurify.sanitize(message.text);
         
@@ -189,13 +226,13 @@
                   </button>
                   {message.type !== "user" && (
                     <>
-                       <button
+                      <button
                         className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer"
-                        onClick={() => handleTextToSpeech(message.text)}
-                        onMouseEnter={() => setIsHovered(true)}  // Set hover state to true
-                        onMouseLeave={() => setIsHovered(false)} // Set hover state to false
+                        onClick={() => handleTextToSpeech(message.text, message.id)}
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
                       >
-                        {isSpeaking && isHovered ? <HiSpeakerXMark /> : <HiSpeakerWave />}
+                        {speakingMessageId === message.id && isHovered ? <HiSpeakerXMark /> : <HiSpeakerWave />}
                       </button>
                       <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={handleLike}> <MdThumbUp /> </button>
                       <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={handleDislike}> <MdThumbDown /> </button>
