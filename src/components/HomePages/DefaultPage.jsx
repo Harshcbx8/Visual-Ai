@@ -48,7 +48,7 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen }) {
         { icon: <DiAtom  size={30} />, title: "VISUAL Assistant", description: "Interactive globe visualizing AI's real-time processes and cognitive activities." },
     ],
 
-    "GPT-4.0": [
+    "Open-AI": [
         { icon: <LuTextCursorInput size={30} />, title: "Text Generation", description: "Generates human-like text with deep contextual awareness"  },
         { icon: <FaCode size={30} />, title: "Coding & Debugging", description: "Advanced coding support, explanations, and fixes" },
         { icon: <LiaChartAreaSolid  size={30} />, title: "Reasoning & Decision Making",  description: "Handles complex reasoning and problem-solving tasks" },

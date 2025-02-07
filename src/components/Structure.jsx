@@ -1,5 +1,6 @@
     import React, { useContext, useEffect, useRef, useState} from "react";
     import { toast } from 'react-toastify';
+    import { motion } from "framer-motion";
     import { RiAttachmentLine } from "react-icons/ri";
     import { IoMdArrowRoundUp } from "react-icons/io";
     import { Context } from "../context/Context";
@@ -18,7 +19,7 @@
 
 
 
-    export default function Structure({ currentWidth, SetHome }) {
+    export default function Structure({ currentWidth, SetHome, aiModel }) {
       const {
         onSent,
         loading,
@@ -33,6 +34,7 @@
 
       const messagesEndRef = useRef(null);
       const [isHovered, setIsHovered] = useState(false); 
+
 
       useEffect(() => {
           messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -58,7 +60,11 @@
       };
 
       const handleCopy = (text) => {
-        navigator.clipboard.writeText(text)
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = DOMPurify.sanitize(text);
+        const purifiedText = tempDiv.textContent || tempDiv.innerText;
+        
+        navigator.clipboard.writeText(purifiedText)
         .then(() => {
           toast.success("Text copied to clipboard!", {
             position: "bottom-right",
@@ -171,7 +177,7 @@
       
 
       return (
-        <div className={`flex flex-col justify-self-center gap-2 text-white ${currentWidth < 780 ? "w-[98%] h-[85vh] " : "w-[45rem] h-[90vh]"}`}>
+        <div className={` flex flex-col justify-self-center gap-2 text-white ${currentWidth < 780 ? "w-[98%] h-[85vh] " : "w-[45rem] h-[90vh]"}`}>
           <div className="flex-1 p-4 overflow-y-scroll gap-2 custom-scrollbar rounded-2xl overflow-x-hiddeen h-[80%]">
 
         {messages.map((message, index) => (
@@ -259,7 +265,8 @@
           <div ref={messagesEndRef} />
         </div>
 
-          {/* Chat Input Section */}
+        {aiModel === "Gemini" || aiModel === "VISUAL-AI"? (
+
           <div className="border-zinc-700 h-auto bg-zinc-800 text-white rounded-2xl focus-within:ring-[1px] "
            tabIndex="0">
             <div className="relative flex items-center pb-10">
@@ -306,6 +313,19 @@
               </button>
             </div>
           </div>
+           ):(
+            <motion.div 
+              key={aiModel}
+              initial={{ opacity: 0, scale: 0.8 }} 
+              animate={{ opacity: 1, scale: 1 }} 
+              exit={{ opacity: 0, scale: 0.8 }} 
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="h-auto w-auto text-md  flex justify-center text-black"
+            >
+              <h2 className=" bg-white  px-4 py-2 rounded-lg shadow-lg">This AI model is currently unavailable</h2>
+            </motion.div>
+           )
+          }
         </div>
       );
     }

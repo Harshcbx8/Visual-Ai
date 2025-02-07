@@ -76,7 +76,7 @@ function App() {
 
 
   return (
-    <div className={`baloo-paaji-2-BaseFont1 transition-all ease-linear duration-300 ${width > 520? (isSideBarOpen ? "w-[80%] ml-[20%] " : "w-[100%]") : ""}`}>
+    <div className={`baloo-paaji-2-BaseFont1 transition-all ease-linear duration-300 ${width > 520? (isSideBarOpen ? "w-[80%]  ml-[20%] " : "w-[100%]") : ""}`}>
       {/* Header */}
       <Header
         onMenuClick={toggleSideBar}
@@ -102,7 +102,7 @@ function App() {
 
       {/* Main Structure */}
 
-      <Structure currentWidth={width}  SetHome={SetHome}/>
+      <Structure currentWidth={width} aiModel={selectedModel}  SetHome={SetHome}/>
 
        {/* Conditionally Render TheVISAI */}
        {selectedModel === "VISUAL-AI" && <TheVISAI />}
