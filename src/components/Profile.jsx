@@ -41,7 +41,7 @@ const Profile = () =>{
      
  return(
 
-      <div className=" flex flex-col justify-evenly  gap-1 text-xl border-b-2 border-zinc-600 mb-2">
+      <div className="flex flex-col justify-evenly  gap-1 text-xl border-b-2 border-zinc-600 mb-2">
 
            <div className="flex items-center justify-between cursor-auto">
             <p>Welcome</p>

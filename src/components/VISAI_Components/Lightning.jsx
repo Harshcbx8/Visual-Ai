@@ -1,8 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useContext } from 'react';
+import { Context } from '../../context/Context';
 
-const Lightning = () => {
+const Lightning = ({width}) => {
+   const {globeSpeed, isSpeaking} = useContext(Context);
+      
   const [lines, setLines] = useState([]);
   const [rings, setRings] = useState([]); // Add this at the beginning of your Lightning component
 
@@ -54,17 +58,19 @@ const Lightning = () => {
     };
   }, [radius, numPoints, lightningColors]);
 
+
   // Generate circular rings
   const generateRings = useCallback(() => {
     const newRings = Array.from({ length: numCircularRings }, (_, i) => ({
-      radius: radius + i * 0.1, // Slightly increase radius for each ring
-      axis: new THREE.Vector3(0.2, 0.5, 0.4), // Rotate around the y-axis (adjust if needed)
-      direction: Math.random() > 0.5 ? 1 : 1, // Random rotation direction
+      radius: radius + i * 0.1,
+      axis: new THREE.Vector3(0.2, 0.5, 0.4),
+      direction: Math.random() > 0.5 ? 1 : -1,
       color: lightningColors[Math.floor(Math.random() * lightningColors.length)],
-      rotationSpeed: Math.random() * 0.005 + 0.01, // Random speed for each ring
+      rotationSpeed: Math.random() * globeSpeed + 0.01, // Dynamically adjust rotation speed
     }));
     setRings(newRings);
-  }, [radius, numCircularRings, lightningColors]);
+  }, [radius, numCircularRings, lightningColors, globeSpeed]); // Add globeSpeed as dependency
+  
 
   // Update lightning periodically
   useEffect(() => {
@@ -77,7 +83,7 @@ const Lightning = () => {
     }, lightningDuration + 300); // Add a slight delay between lightning bursts
     generateRings(); // Generate rings initially
     return () => clearInterval(interval);
-  }, [generateLightningLine, generateRings]);
+  }, [generateLightningLine, generateRings, globeSpeed]);
 
   // Animate lightning lines (optional, if you want them to shift slightly)
   useFrame(() => {
@@ -128,14 +134,13 @@ const Lightning = () => {
         );
       })}
 
-      {/* Circular Rings */}
       {rings.map((ring, index) => (
         <mesh
           key={index}
           position={[0, 0, 0]} // Center the rings around the globe
           rotation={[ring.rotation, ring.rotation, ring.rotation]} // Apply rotation on the x-axis
         >
-          <ringGeometry args={[ring.radius - 0.01, ring.radius, 64]} />
+          {!isSpeaking &&  <ringGeometry args={[ring.radius - 0.01, ring.radius, 64]} />}
           <meshBasicMaterial
             color={ring.color}
             side={THREE.DoubleSide}

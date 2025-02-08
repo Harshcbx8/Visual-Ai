@@ -12,33 +12,25 @@ const ContextProvider = (props) => {
   const [loading, setLoading] = useState(false);
   const [resultData, setResultData] = useState("");
   const [messages, setMessages] = useState([]);
-  const [isTyping, setIsTyping] = useState(false); // Track if AI is typing
+  const [isTyping, setIsTyping] = useState(false);
 
   // AI Globe Animation States
-  const [globeSpeed, setGlobeSpeed] = useState(1); // Speed of rings/particles
-  const [globePosition, setGlobePosition] = useState({ x: 0, y: 0 }); // Position of the AI globe
-  const [globeColor, setGlobeColor] = useState("white"); // Color transition state
+  const [globeSpeed, setGlobeSpeed] = useState(0.05); // Speed of rings/particles
   const [globeSpeaking, setGlobeSpeaking] = useState(false); // AI Speaking animation trigger
+  const [particleSpeed, setParticleSpeed] = useState(0.015);
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const regenerateResponse = async (currentMessage) => {
     if (isTyping) return;
     setLoading(true);
     setIsTyping(true);
-    
-    // Regenerate the response by sending the prompt again
     await onSent(currentMessage);
   };
 
   const formatText = (text) => {
-    // Format **bold** text
     text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-  
-    // Format *italic* text
     text = text.replace(/\*(.*?)\*/g, "<em>$1</em>");
-  
-    // Format new lines
     text = text.replace(/\n/g, "<br>");
-  
     return text;
   };
   
@@ -52,49 +44,21 @@ const ContextProvider = (props) => {
     setLoading(false);
     setShowResult(false);
     setMessages([]); // Clear messages for a new chat
-  };
-
-  // Function to update AI Globe state based on AI actions
-  const updateGlobeState = (action) => {
-    switch (action) {
-      case "thinking":
-        setGlobeSpeed(3); // Increase speed
-        setGlobeColor("cyan"); // Transition color
-        break;
-      case "moving":
-        setGlobePosition({ x: 100, y: 50 }); // Move towards the output box
-        break;
-      case "writing":
-        setGlobeSpeed(2); // Moderate speed
-        setGlobePosition({ x: Math.random() * 50, y: Math.random() * 50 }); // Random slight movement
-        setGlobeColor("navy"); // Change color to navy while generating
-        break;
-      case "speaking":
-        setGlobeSpeaking(true); // Activate wave effect
-        setGlobeSpeed(1); // Normal speed
-        setGlobeColor("cyan"); // Cyan glow effect
-        break;
-      case "reset":
-        setGlobeSpeed(1); // Reset speed
-        setGlobePosition({ x: 0, y: 0 }); // Default position
-        setGlobeColor("white"); // Reset color
-        setGlobeSpeaking(false); // Stop speaking animation
-        break;
-      default:
-        break;
-    }
-  };
-
-  const onSent = async (prompt) => {
-
-    if (isTyping) return; 
     
+  };
+
+  
+  const onSent = async (prompt) => {
+   
+    if (isTyping) return; 
     setLoading(true);
     setShowResult(true);
     setIsTyping(true); 
-    updateGlobeState("thinking"); // AI starts thinking
-  
-    // Add a loading message to the chat
+
+    setGlobeSpeed(0.08); 
+    setParticleSpeed(0.08);
+    
+
     setMessages((prev) => [
       ...prev,
       { text: "", type: "bot", isLoading: true },
@@ -109,25 +73,23 @@ const ContextProvider = (props) => {
       response = "Error: Unable to fetch data.";
     }
   
-    setLoading(false); // Stop loading animation
+    setLoading(false); 
+    
 
     setPreviousPrompt((prev) => {
-      const updatedPrompts = [prompt, ...prev]; // Add the new prompt to the start of the array
-      return updatedPrompts.slice(0, 20); // Keep only the most recent 20 prompts
+      const updatedPrompts = [prompt, ...prev];
+      return updatedPrompts.slice(0, 20); 
     });
 
-    updateGlobeState("moving");
   
-     // 1. Handle Code Blocks First
+  
      let formattedResponse = response.replace(/```(\w+)?\n([\s\S]+?)```/g, (match, lang, code) => {
       // Wrap the code block in a div with a special class
        return `<div class='code-block'><pre><code class='language-${lang || "plaintext"}'>${code}</code></pre></div>`;
      });
 
-      // 2. Apply Text Formatting (bold, italic, new lines)
-      formattedResponse = formatText(formattedResponse);
+    formattedResponse = formatText(formattedResponse);
   
-    // Update messages to start the typing animation
     setMessages((prev) => {
       
       const updatedMessages = prev.map((msg) =>
@@ -136,14 +98,14 @@ const ContextProvider = (props) => {
   
       return [
         ...updatedMessages,
-        { text: "", type: "bot", isLoading: false }, // Placeholder for the animated response
+        { text: "", type: "bot", isLoading: false },
       ];
+      
     });
-  
-  
-      updateGlobeState("writing"); // AI starts writing
 
-    // Typewriter animation
+  
+    
+
     let currentText = "";
     const responseChars = [...formattedResponse];
     const speed = responseChars.length > 100 ? 1 : 20; // Adjust typing speed
@@ -161,6 +123,8 @@ const ContextProvider = (props) => {
         });
         if (index === responseChars.length - 1) {
           setIsTyping(false); // Unlock input when typing completes
+          setParticleSpeed(0.015);
+          setGlobeSpeed(0.05);
         }
        }, index * speed); // Adjust typing speed here (50ms per character)
       });
@@ -184,9 +148,10 @@ const ContextProvider = (props) => {
     setMessages,
     isTyping,
     globeSpeed,
-    globePosition,
-    globeColor,
     globeSpeaking,
+    particleSpeed,
+    isSpeaking,
+    setIsSpeaking,
   };
 
   return <Context.Provider value={contextValue}>{props.children}</Context.Provider>;

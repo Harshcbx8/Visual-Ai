@@ -28,7 +28,7 @@
         messages,
         setMessages,
         isTyping,
-        regenerateResponse, 
+        setIsSpeaking,
         editResponse, 
       } = useContext(Context);
 
@@ -103,6 +103,7 @@
       };
     
       const [speakingMessageId, setSpeakingMessageId] = useState(null); // Track which message is speaking
+      
       const handleTextToSpeech = (text, messageId) => {
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = DOMPurify.sanitize(text);
@@ -113,6 +114,7 @@
         if (speakingMessageId === messageId) {
           speechSynthesis.cancel();
           setSpeakingMessageId(null);
+          setIsSpeaking(false); // Set speaking to false when stopped
           return;
         }
       
@@ -157,9 +159,14 @@
         utterance.volume = 1;
       
         setSpeakingMessageId(messageId);
+        setIsSpeaking(true);
+
         speechSynthesis.speak(utterance);
       
-        utterance.onend = () => setSpeakingMessageId(null);
+        utterance.onend = () => {
+          setSpeakingMessageId(null);
+          setIsSpeaking(false); // Set speaking to false when speech ends
+        };
       };
       
       
@@ -177,7 +184,7 @@
       
 
       return (
-        <div className={` flex flex-col justify-self-center gap-2 text-white ${currentWidth < 780 ? "w-[98%] h-[85vh] " : "w-[45rem] h-[90vh]"}`}>
+        <div className={` flex flex-col justify-self-center gap-2 text-white ${currentWidth < 901 ? "w-[98%] h-[85vh] " : "w-[45rem] h-[90vh]"}`}>
           <div className="flex-1 p-4 overflow-y-scroll gap-2 custom-scrollbar rounded-2xl overflow-x-hiddeen h-[80%]">
 
         {messages.map((message, index) => (

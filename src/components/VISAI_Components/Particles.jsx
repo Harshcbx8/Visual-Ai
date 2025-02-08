@@ -1,19 +1,21 @@
-import React, { useRef, useMemo } from 'react';
+import React, {useContext, useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { Context } from '../../context/Context';
 
-const Particles = () => {
+const Particles = ({width}) => {
+    const {particleSpeed} = useContext(Context);
+
   const groupRef = useRef();
 
   // Wrap particleColors in useMemo to prevent re-initialization
   const particleColors = useMemo(
-    () => ['aqua', 'cyan', 'gold', 'white'],
+    () => ['lightblue', 'cyan', 'gold', 'white'],
     []
   );
-
   // Generate particles with useMemo
   const particles = useMemo(() => {
-    return Array.from({ length: 50 }, () => ({
+    return Array.from({ length: width<520? 25 : 50 }, () => ({
       position: new THREE.Vector3(
         (Math.random() - 0.5) * 2,
         (Math.random() - 0.5) * 2,
@@ -27,7 +29,7 @@ const Particles = () => {
   // Update particle movement
   useFrame(() => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.015; // Rotation speed
+      groupRef.current.rotation.y += particleSpeed; // Rotation speed
 
       particles.forEach((particle) => {
         particle.position.y += particle.speed;
@@ -42,7 +44,7 @@ const Particles = () => {
     <group ref={groupRef}>
       {particles.map((particle, index) => (
         <mesh key={index} position={particle.position}>
-          <sphereGeometry args={[0.015, 16, 16]} />
+          <sphereGeometry args={[width<520? 0.010 : 0.015, 16, 16]} />
            <meshBasicMaterial
                 color={particle.color}
                 side={THREE.DoubleSide}

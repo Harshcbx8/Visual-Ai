@@ -89,22 +89,25 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen }) {
   const features = useMemo(() => modelFeatures[aiModel] || [], [aiModel]);
 
   // Full Form for VISUAL-AI
-  // const visualFullForm = aiModel === "VISUAL-AI" && (
-  //   <div className="text-center mb-6">
-  //     <h2 className="text-2xl font-bold text-white">VISUAL</h2>
-  //     <p className="text-gray-400 text-lg">
-  //       <strong>Vast Interactive Simple User-friendly Application Language</strong>
-  //     </p>
-  //   </div>
-  // );
+  const visualFullForm = aiModel === "VISUAL-AI" && (
+    <div className="text-center mb-6">
+      <h2 className="text-2xl font-medium text-white">VISUAL</h2>
+      <p className="text-gray-400 font-thin text-md">
+        <strong>Visualized Interaction Simulated User-friendly Adaptive Learning</strong>
+      </p>
+    </div>
+  );
 
   return (
-    <div className={`absolute  mt-[6rem] flex flex-col items-center justify-center  text-white p-8 transition-all duration-300  ${(isSideBarOpen && width>520)? "w-[80%]" : "w-full"} h-fit `}>
+    <div className={` absolute mt-[6rem] flex flex-col items-center justify-center  text-white p-8 transition-all duration-300  ${(isSideBarOpen && width>901)? "w-[80%]" : "w-full"} h-fit `}>
       
-      {/* {visualFullForm} */}
+      <div className="-z-10 absolute -top-[5rem] ">
+      {visualFullForm}
+      </div>
+      
       
       <motion.div
-        className={`grid grid-cols-2 md:grid-cols-3 gap-6 self-center ${width<520? "w-[100%]" : "w-[80%]"}`}
+        className={`grid grid-cols-2 md:grid-cols-3 gap-6 self-center ${width<901? "w-[100%]" : "w-[80%]"}`}
         key={aiModel}  // Ensures re-animation when model changes
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
