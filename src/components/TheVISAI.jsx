@@ -162,7 +162,7 @@ const TheVISAI = ({width}) => {
         <ambientLight intensity={0.3} />
         <pointLight position={[5, 5, 5]} intensity={1} />
         <Globe animatedGlobeColors={animatedGlobeColors} />
-        <Lightning width={width} />
+        <Lightning />
         <Particles width={width}/>
         {isSpeaking && <WaveEffect width={width}/>}
         <OrbitControls enableZoom={false} />

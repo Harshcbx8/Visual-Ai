@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { useContext } from 'react';
 import { Context } from '../../context/Context';
 
-const Lightning = ({width}) => {
+const Lightning = () => {
    const {globeSpeed, isSpeaking} = useContext(Context);
       
   const [lines, setLines] = useState([]);
@@ -28,7 +28,7 @@ const Lightning = ({width}) => {
   // Generate a lightning strike from a random point on the globe
   const generateLightningLine = useCallback(() => {
     const points = [];
-    const maxDisplacement = 0.15;
+    const maxDisplacement = 0.05;
 
     // Random starting point on the globe
     const theta = Math.random() * Math.PI * 2; // Longitude
@@ -44,9 +44,9 @@ const Lightning = ({width}) => {
     // Generate zigzag path
     for (let i = 1; i < numPoints; i++) {
       const displacement = new THREE.Vector3(
-        (Math.random() - 0.6) * maxDisplacement,
-        (Math.random() - 0.5) * maxDisplacement,
-        (Math.random() - 0.5 ) * maxDisplacement
+        (Math.random() - 0.3) * maxDisplacement,
+        (Math.random() - 0.2) * maxDisplacement,
+        (Math.random() - 0.4) * maxDisplacement
       );
       const nextPoint = points[i - 1].clone().add(displacement);
       points.push(nextPoint);

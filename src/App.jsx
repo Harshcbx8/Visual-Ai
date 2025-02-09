@@ -18,6 +18,7 @@ function App() {
   const [isSideBarOpen, setSideBarOpen] = useState(false);
   const [isAuthOpen, setAuthOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState("Gemini"); // State for model selection
+  const [profOpen, setProfOpen] = useState(false);
 
   const sideBarRef = useRef(null);
 
@@ -87,14 +88,16 @@ function App() {
         selectedModel={selectedModel} // Pass state
         setSelectedModel={setSelectedModel} // Pass setter function
         SetHome={SetHome}
+        setProfOpen={setProfOpen}
+        profOpen={profOpen}
       />
 
       
-      {home && <DefaultPage aiModel={selectedModel} width={width} isSideBarOpen={isSideBarOpen}/>}
+      {home && <DefaultPage aiModel={selectedModel} width={width} isSideBarOpen={isSideBarOpen} profOpen={profOpen}/>}
 
       {/* Sidebar */}
       <div ref={width < 901 ? sideBarRef : null}>
-        <LeftSideBar isOpen={isSideBarOpen}  SetHome={SetHome}/>
+        <LeftSideBar isOpen={isSideBarOpen}  SetHome={SetHome} user={user}/>
       </div>
 
       {/* Auth */}

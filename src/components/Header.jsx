@@ -9,7 +9,7 @@ import { IoCheckmarkCircle } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 import { MdError } from "react-icons/md";
 
-export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser, selectedModel, setSelectedModel, SetHome }) {
+export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser, selectedModel, setSelectedModel, SetHome, setProfOpen, profOpen}) {
   const [isOpen, setOpen] = useState(false);
   const [onMenu, setOnMenu] = useState(false);
   const [newChat, setNewChat] = useState(false);
@@ -69,6 +69,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
         !profileButtonRef.current.contains(event.target)
       ) {
         setOpen(false);
+        setProfOpen(profOpen);
       }
 
     };
@@ -87,6 +88,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
   // Toggle profile dropdown
   const toggleProfile = () => {
     setOpen((prev) => !prev);
+    setProfOpen(!profOpen);
   };
 
   // Logout function
@@ -234,7 +236,7 @@ export default function Header({ onMenuClick, isSideBarOpen, Auth, user, setUser
 
         {/* Profile Dropdown */}
         {isOpen && (
-          <div ref={profileRef} className="z-50 h-auto w-auto p-2 right-1 flex flex-col absolute bg-zinc-900 bg-opacity-60 border-[1px] border-slate-700 rounded-lg transition-all duration-300 translate-y-4">
+          <div ref={profileRef} className="h-auto w-auto p-2 right-1 flex flex-col absolute bg-zinc-900 bg-opacity-60 border-[1px] border-slate-700 rounded-lg transition-all duration-300 translate-y-4">
             <div>
               <Profile />
               <button

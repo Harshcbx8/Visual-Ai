@@ -15,7 +15,7 @@ const ContextProvider = (props) => {
   const [isTyping, setIsTyping] = useState(false);
 
   // AI Globe Animation States
-  const [globeSpeed, setGlobeSpeed] = useState(0.05); // Speed of rings/particles
+  const [globeSpeed, setGlobeSpeed] = useState(0.02); // Speed of rings/particles
   const [globeSpeaking, setGlobeSpeaking] = useState(false); // AI Speaking animation trigger
   const [particleSpeed, setParticleSpeed] = useState(0.015);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -124,7 +124,7 @@ const ContextProvider = (props) => {
         if (index === responseChars.length - 1) {
           setIsTyping(false); // Unlock input when typing completes
           setParticleSpeed(0.015);
-          setGlobeSpeed(0.05);
+          setGlobeSpeed(0.02);
         }
        }, index * speed); // Adjust typing speed here (50ms per character)
       });
