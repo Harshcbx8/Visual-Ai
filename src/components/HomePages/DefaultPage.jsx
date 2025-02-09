@@ -94,11 +94,13 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen, profOpen })
   );
 
   return (
-    <div className={`${profOpen? "-z-10" : "z-0" }  absolute mt-[6rem] flex flex-col items-center justify-center  text-white p-8 transition-all duration-300  ${(isSideBarOpen && width>901)? "w-[80%]" : "w-full"} h-fit `}>
-      
-      <div className="-z-10 absolute -top-[5rem] ">
+
+      <>
+      <div className=" absolute -z-10 w-full mt-4">
       {visualFullForm}
       </div>
+
+      <div className={`${profOpen? "-z-10" : "z-0" }  absolute mt-[6rem] flex flex-col items-center justify-center  text-white p-8 transition-all duration-300  ${(isSideBarOpen && width>901)? "w-[80%]" : "w-full"} h-fit `}>
       
       
       <motion.div
@@ -115,7 +117,7 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen, profOpen })
         {features.map((feature, index) => (
           <motion.div
             key={index}
-            className=" rounded-2xl shadow-lg p-2 text-center hover:scale-105 hover:bg-zinc-900 transition-all duration-300"
+            className=" rounded-2xl shadow-lg p-2 text-center hover:scale-105 hover:bg-zinc-900 transition-all cursor-pointer  duration-300"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
@@ -135,5 +137,7 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen, profOpen })
         ))}
       </motion.div>
     </div>
+
+    </>
   );
 }

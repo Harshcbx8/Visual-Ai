@@ -57,7 +57,7 @@ const Globe = ({animatedGlobeColors}) => {
 const TheVISAI = ({width}) => {
   const {isTyping, isSpeaking} = useContext(Context);
   const containerRef = useRef(null);
-  const [position, setPosition] = useState({x: 150, y: 100});
+  const [position, setPosition] = useState({x: 100, y: 100});
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
 
@@ -108,8 +108,8 @@ const TheVISAI = ({width}) => {
       let newY = position.y + (clientY - dragStartRef.current.y);
 
       // Prevent going out of screen
-      const screenWidth = window.innerWidth - 100;
-      const screenHeight = window.innerHeight - 100;
+      const screenWidth = window.innerWidth - 200;
+      const screenHeight = window.innerHeight - 200;
       newX = Math.max(0, Math.min(newX, screenWidth));
       newY = Math.max(0, Math.min(newY, screenHeight));
 
@@ -156,7 +156,7 @@ const TheVISAI = ({width}) => {
       onMouseDown={handleStart}
       onTouchStart={handleStart}
 
-      className="rounded-full w-fit h-fit "
+      className="rounded-full w-fit h-fit overflow-hidden"
     >
       <Canvas camera={{ position: [2, 2, 2], fov: 50 }} className=" rounded-full w-fit h-fit " >
         <ambientLight intensity={0.3} />
