@@ -1,7 +1,4 @@
-import { createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signInWithPopup, 
-  GoogleAuthProvider } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import React,{useState} from 'react';
 import { auth, db } from './Firebase';
 import {setDoc, doc} from "firebase/firestore";

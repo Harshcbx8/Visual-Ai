@@ -16,50 +16,75 @@
     import DOMPurify from "dompurify";
     import { TiTick } from "react-icons/ti";
     import { MdError } from "react-icons/md";
+    import MarkdownWithCopy from './DATA/MarkdownWithCopy';
 
-
-
-    export default function Structure({ currentWidth, SetHome, aiModel }) {
-      const {
-        onSent,
-        loading,
-        setInput,
-        input,
-        messages,
-        setMessages,
-        isTyping,
-        setIsSpeaking,
-        editResponse, 
-      } = useContext(Context);
+  export default function Structure({ currentWidth, SetHome, aiModel }) {
+      const {onSent, loading, setInput, input, messages, setMessages, isTyping, setIsSpeaking} = useContext(Context);
 
       const messagesEndRef = useRef(null);
-      const [isHovered, setIsHovered] = useState(false); 
+      const [isHovered, setIsHovered] = useState(false);
+      const [editingMessageId, setEditingMessageId] = useState(null); // ID of the message being edited
+      const [editedText, setEditedText] = useState(""); // Text being edited
+      
+      useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, [messages]);
 
+      const editResponse = (messageId, text) => {
+        setEditingMessageId(messageId);
+        setEditedText(text);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === messageId ? { ...msg, isEditing: true } : msg
+          )
+        );
+      };
 
+      const handleEditChange = (e) => {
+        setEditedText(e.target.value);
+      };
+
+      const handleSubmitEdit = async (messageId) => {
+        const editedMessage = editedText.trim();
+        if (!editedMessage) return;
+      
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === messageId ? { ...msg, text: editedMessage, isEditing: false } : msg
+          )
+        );
+      
+        setEditingMessageId(null);
+        setEditedText("");
+      
+        // Send the edited message as a new user message
+        await handleSendMessage(editedMessage);
+      };
+      
       useEffect(() => {
           messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
       }, [messages]);
 
-      const handleSendMessage = async () => {
-        if (!input.trim() || isTyping) return; // Prevent sending while AI is typing
-
-        // Add user message to chat
+      const handleSendMessage = async (customText = null) => {
+        const messageText = customText || input.trim();
+        if (!messageText || isTyping) return;
+      
         const userMessage = {
           id: Date.now(),
-          text: input,
+          text: messageText,
           type: "user",
         };
-
+      
         setMessages((prev) => [...prev, userMessage]);
-
-        // Clear input field
-        setInput("");
-
-        // Send the message and wait for the bot's response
-        await onSent(input); // Wait for onSent to process the response
+        setInput(""); 
+      
+        await onSent(messageText); // Process response from AI
       };
+      
 
-      const handleCopy = (text) => {
+
+
+    const handleCopy = (text) => {
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = DOMPurify.sanitize(text);
         const purifiedText = tempDiv.textContent || tempDiv.innerText;
@@ -84,6 +109,8 @@
         });
     
       };
+
+
       const handleLike = () => {
         toast.success("Liked!", {
           position: "bottom-right",
@@ -102,6 +129,8 @@
         });
       };
     
+
+
       const [speakingMessageId, setSpeakingMessageId] = useState(null); // Track which message is speaking
       
       const handleTextToSpeech = (text, messageId) => {
@@ -170,26 +199,24 @@
       };
       
       
-      const renderMessageContent = (message) => {
-        const sanitizedText = DOMPurify.sanitize(message.text);
-        
-        if (!sanitizedText) return null;
-      
-        return (
-          <div dangerouslySetInnerHTML={{ __html: sanitizedText }} />
-        );
-      
-        
-      };
-      
-
+     
+   const renderMessage = msg => msg.isEditing ? (
+    <textarea
+      className="w-full resize-none outline-none bg-transparent"
+      value={editedText}
+      onChange={e => { setEditedText(e.target.value); e.target.style.height='auto'; e.target.style.height=`${e.target.scrollHeight}px`; }}
+      autoFocus
+    />
+  ) : (
+    <MarkdownWithCopy text={msg.text} />
+  );
       return (
         <div className={` flex flex-col justify-self-center gap-2 text-white ${currentWidth < 901 ? "w-[98%] h-[85vh] " : "w-[45rem] h-[90vh]"}`}>
           <div className="flex-1 p-4 overflow-y-scroll gap-2 custom-scrollbar rounded-2xl overflow-x-hiddeen h-[80%]">
 
         {messages.map((message, index) => (
           <div key={message.id || `msg-${index}`}
-            className={`p-2 rounded-lg mb-2 ${message.type === "user"
+            className={`px-2 rounded-lg mb-1 ${message.type === "user"
                 ? "text-black w-fit ml-auto max-w-[80%]"
                 : "text-white w-fit max-w-[100%]"
 
@@ -219,24 +246,46 @@
           ):(
               <div>
                 <div
-                  className={`${message.type === "user" ? "p-2 rounded-lg" : " overflow-x-scroll overflow-y-hidden custom-scrollbar-horizontal"}`}
+                  className={`${message.type === "user" ? "p-1 px-2 rounded-lg" : " overflow-x-scroll overflow-y-hidden custom-scrollbar-horizontal"}`}
                   style={{ backgroundColor: message.type !== "user" ? "rgb(10,10,10)" : "rgb(240,240,240)" }}
-                >
-                  
-                {renderMessageContent(message)}
-                </div>
-                
+                >  {renderMessage(message)}
+              
+              </div>
+
                 <div
-                  className={`icons-container text-white flex gap-2 mt-2 ${currentWidth > 520 ? "opacity-0 transition-opacity duration-300" : "opacity-100"}`}
+                  className={`icons-container text-white flex ${currentWidth > 520 ? "opacity-0 transition-opacity duration-300" : "opacity-100"}`}
                 >
                   <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => {
                     handleCopy(message.text);
                     }}>
                     <MdContentCopy />
                   </button>
-                  <button className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer" onClick={() => editResponse(message.text)}>
-                    <FaEdit />
-                  </button>
+
+                  {message.type === "user" && (
+                    <>
+                       <button
+                       className="p-2 rounded-lg hover:bg-zinc-900 cursor-pointer"
+                       onClick={() => editResponse(message.id, message.text)}
+                     >
+                       <FaEdit />
+                     </button>
+   
+                      {editingMessageId === message.id && (
+                        <button
+                          className="p-2 rounded-lg h-8 w-8 hover:bg-zinc-900 focus:outline-none cursor-pointer"
+                          title="Send Message"
+                          onClick={() => handleSubmitEdit(message.id)}
+                          disabled={isTyping || !editedText.trim()} // Ensure this uses editedText, not input
+                        >
+              
+                          {isTyping ? <AiOutlineLoading className="animate-spin" /> : <IoMdArrowRoundUp />}
+                        </button>
+                      )}
+                     </>
+                  )}
+                 
+
+
                   {message.type !== "user" && (
                     <>
                       <button
@@ -294,7 +343,6 @@
                     e.preventDefault();
                     handleSendMessage();
                     SetHome(false);
-
                   }
                 }}
               />
@@ -335,4 +383,5 @@
           }
         </div>
       );
+
     }

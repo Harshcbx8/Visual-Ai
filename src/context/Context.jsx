@@ -33,13 +33,8 @@ const ContextProvider = (props) => {
     text = text.replace(/\n/g, "<br>");
     return text;
   };
+
   
-
-  const editResponse = (currentMessage) => {
-    setInput(currentMessage);
-    setMessages((prev) => prev.filter((msg) => msg.text !== currentMessage)); // Remove the message being edited
-  };
-
   const newChats = () => {
     setLoading(false);
     setShowResult(false);
@@ -135,7 +130,6 @@ const ContextProvider = (props) => {
     setPreviousPrompt,
     onSent,
     regenerateResponse,
-    editResponse,
     setRecentPrompt,
     recentPrompt,
     showResult,
