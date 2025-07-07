@@ -1,7 +1,6 @@
 // src/components/MarkdownWithCopy.tsx
 import React from 'react'
 import ReactMarkdown, { Components } from 'react-markdown'
-import type { CodeProps } from 'react-markdown/lib/complex-types'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 
@@ -27,6 +26,14 @@ export type MarkdownWithCopyProps = {
 export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
   const handleCopy = (code: string) => {
     void navigator.clipboard.writeText(code)
+  }
+
+  // Define the type for code props
+  type CodeProps = {
+    inline?: boolean
+    className?: string
+    children?: React.ReactNode
+    [key: string]: any
   }
 
   const components: Components = {

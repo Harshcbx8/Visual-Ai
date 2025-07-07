@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { FaMicrophone, FaRegImage, FaFileAlt, FaCode, FaGamepad } from "react-icons/fa";
 import { LuTextCursorInput, LuBrainCircuit } from "react-icons/lu";
@@ -86,7 +86,7 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen, profOpen })
       transition={{ duration: 0.6, ease: "easeInOut" }} // Smooth transition
       className="text-center mb-6"
     >
-      <h2 className="text-2xl font-medium text-white">VISUAL</h2>
+      <h2 className="text-2xl font-medium ">VISUAL</h2>
       <p className="text-gray-400 font-thin text-md">
         <strong>Visualized Interaction Simulated User-friendly Adaptive Learning</strong>
       </p>
@@ -100,7 +100,7 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen, profOpen })
       {visualFullForm}
       </div>
 
-      <div className={`${profOpen? "-z-10" : "z-0" }  absolute mt-[6rem] flex flex-col items-center justify-center  text-white p-8 transition-all duration-300  ${(isSideBarOpen && width>901)? "w-[80%]" : "w-full"} h-fit `}>
+      <div className={`${profOpen? "-z-10" : "z-0" }  absolute mt-[6rem] flex flex-col items-center justify-center  p-8 transition-all duration-300  ${(isSideBarOpen && width>901)? "w-[80%]" : "w-full"} h-fit `}>
       
       
       <motion.div
@@ -117,7 +117,7 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen, profOpen })
         {features.map((feature, index) => (
           <motion.div
             key={index}
-            className=" rounded-2xl shadow-lg p-2 text-center hover:scale-105 hover:bg-zinc-900 transition-all cursor-pointer  duration-300"
+            className=" rounded-2xl shadow-md p-2 text-center hover:scale-105 theme-div transition-all cursor-pointer  duration-300"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
@@ -127,12 +127,12 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen, profOpen })
                 delay: index * 0.03,  // Optional: adds a slight delay between features
             }}
           >
-            <div className="flex justify-center mb-4 text-white">
+            <div className="flex justify-center mb-4">
               {feature.icon}
             </div>
-            <h2 className={`${width<901? "text-sm": "text-xl"} font-semibold mb-2`}>{feature.title}</h2>
+            <h2 className={`${width<901? "text-xs": "text-sm"} font-semibold mb-2`}>{feature.title}</h2>
             {/* Conditionally render the description based on width */}
-            {width > 901 && <p className="text-gray-400">{feature.description}</p>}
+            {width > 901 && <p className="text-gray-400 text-xs">{feature.description}</p>}
           </motion.div>
         ))}
       </motion.div>

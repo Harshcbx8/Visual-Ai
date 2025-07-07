@@ -10,23 +10,25 @@ const ContextProvider = (props) => {
   const [previousPrompt, setPreviousPrompt] = useState([]);
   const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [resultData, setResultData] = useState("");
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
+  // Inside Context.js
+  const [voiceSettings, setVoiceSettings] = useState({
+  rate: 1,
+  pitch: 1,
+  volume: 1,
+  gender: "female", // or "male"
+  });
 
-  // AI Globe Animation States
-  const [globeSpeed, setGlobeSpeed] = useState(0.02); // Speed of rings/particles
-  const [globeSpeaking, setGlobeSpeaking] = useState(false); // AI Speaking animation trigger
+
+
+  // Animation states
+  const [globeSpeed, setGlobeSpeed] = useState(0.02);
+  const [globeSpeaking, setGlobeSpeaking] = useState(false);
   const [particleSpeed, setParticleSpeed] = useState(0.015);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  const regenerateResponse = async (currentMessage) => {
-    if (isTyping) return;
-    setLoading(true);
-    setIsTyping(true);
-    await onSent(currentMessage);
-  };
-
+  // Format markdown and code blocks
   const formatText = (text) => {
     text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
     text = text.replace(/\*(.*?)\*/g, "<em>$1</em>");
@@ -34,97 +36,93 @@ const ContextProvider = (props) => {
     return text;
   };
 
-  
+  // Start a new chat session
   const newChats = () => {
     setLoading(false);
     setShowResult(false);
-    setMessages([]); // Clear messages for a new chat
-    
+    setMessages([]);
   };
 
-  
+  // Send prompt to Gemini API and handle response
   const onSent = async (prompt) => {
-   
-    if (isTyping) return; 
+    if (isTyping) return;
     setLoading(true);
     setShowResult(true);
-    setIsTyping(true); 
-
-    setGlobeSpeed(0.08); 
+    setIsTyping(true);
+    setGlobeSpeed(0.08);
     setParticleSpeed(0.08);
-    
 
+    // Add loading message
     setMessages((prev) => [
       ...prev,
       { text: "", type: "bot", isLoading: true },
     ]);
-  
+
     let response;
     try {
-       response = await run(prompt || input);
+      response = await run(prompt || input);
       if (!response) throw new Error("No response from the server.");
     } catch (error) {
       console.error("Error fetching response:", error);
       response = "Error: Unable to fetch data.";
     }
-  
-    setLoading(false); 
-    
 
-    setPreviousPrompt((prev) => {
-      const updatedPrompts = [prompt, ...prev];
-      return updatedPrompts.slice(0, 20); 
+    setLoading(false);
+
+    // Track previous prompts (max 20)
+    setPreviousPrompt((prev) => [prompt, ...prev].slice(0, 20));
+
+    // Format code blocks and markdown
+    let formattedResponse = response.replace(/```(\w+)?\n([\s\S]+?)```/g, (match, lang, code) => {
+      return `<div class='code-block'><pre><code class='language-${lang || "plaintext"}'>${code}</code></pre></div>`;
     });
-
-  
-  
-     let formattedResponse = response.replace(/```(\w+)?\n([\s\S]+?)```/g, (match, lang, code) => {
-      // Wrap the code block in a div with a special class
-       return `<div class='code-block'><pre><code class='language-${lang || "plaintext"}'>${code}</code></pre></div>`;
-     });
-
     formattedResponse = formatText(formattedResponse);
-  
+
+    // Replace loading message with actual response
     setMessages((prev) => {
-      
-      const updatedMessages = prev.map((msg) =>
+      const updated = prev.map((msg) =>
         msg.isLoading ? { ...msg, isLoading: false, isBot: true } : msg
       );
-  
+      // Add a new message for typing animation
       return [
-        ...updatedMessages,
+        ...updated,
         { text: "", type: "bot", isLoading: false },
       ];
-      
     });
 
-  
-    
-
+    // Typing animation: reveal response character by character
     let currentText = "";
     const responseChars = [...formattedResponse];
-    const speed = responseChars.length > 100 ? 1 : 20; // Adjust typing speed
+    const speed = responseChars.length > 100 ? 1 : 20;
 
     responseChars.forEach((char, index) => {
       setTimeout(() => {
         currentText += char;
         setMessages((prev) => {
-          const updatedMessages = [...prev];
-          updatedMessages[updatedMessages.length - 1] = {
-            ...updatedMessages[updatedMessages.length - 1],
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...updated[updated.length - 1],
             text: currentText,
           };
-          return updatedMessages;
+          return updated;
         });
         if (index === responseChars.length - 1) {
-          setIsTyping(false); // Unlock input when typing completes
+          setIsTyping(false);
           setParticleSpeed(0.015);
           setGlobeSpeed(0.02);
         }
-       }, index * speed); // Adjust typing speed here (50ms per character)
-      });
-   };
-  
+      }, index * speed);
+    });
+  };
+
+  // Regenerate response for a given message
+  const regenerateResponse = async (currentMessage) => {
+    if (isTyping) return;
+    setLoading(true);
+    setIsTyping(true);
+    await onSent(currentMessage);
+  };
+
   const contextValue = {
     previousPrompt,
     setPreviousPrompt,
@@ -134,7 +132,6 @@ const ContextProvider = (props) => {
     recentPrompt,
     showResult,
     loading,
-    resultData,
     input,
     setInput,
     newChats,
@@ -146,6 +143,8 @@ const ContextProvider = (props) => {
     particleSpeed,
     isSpeaking,
     setIsSpeaking,
+    voiceSettings,
+    setVoiceSettings
   };
 
   return <Context.Provider value={contextValue}>{props.children}</Context.Provider>;
