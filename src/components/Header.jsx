@@ -123,7 +123,7 @@ export default function Header({
   }, [setUser]);
 
   return (
-    <header className="flex justify-between items-center px-2 h-12 right-0 w-full theme-text theme-bg-comp z-40 border-b theme-border">
+    <header className="flex justify-between items-center px-2 h-12 right-0 w-full theme-text theme-bg z-40 border-b theme-border">
       {/* Left Section */}
       <div className="flex flex-nowrap w-auto gap-2">
         {/* Sidebar Toggle Button */}
