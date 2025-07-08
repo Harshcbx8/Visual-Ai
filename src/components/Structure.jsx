@@ -11,9 +11,12 @@ import BotOutput from "./StructureComp/BotOutput";
      const messagesEndRef = useRef(null);
      const {onSent, setInput, input, messages, setMessages, isTyping, loading} = useContext(Context);
        
-      useEffect(() => {
-          messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, [messages]);
+       // whenever typing stops, scroll to bottom
+        useEffect(() => {
+          if (!isTyping || setInput!=null) {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+          }
+        }, [isTyping]);
 
       const handleSendMessage = async (customText = null) => {
         const messageText = customText || input.trim();
@@ -32,7 +35,7 @@ import BotOutput from "./StructureComp/BotOutput";
       };
       
       return (
-        <div className={`flex flex-col justify-self-center gap-2 sm:max-w-4xl w-full h-screen pb-16
+        <div className={`flex flex-col justify-self-center gap-2 sm:max-w-4xl w-full h-screen pt-12 pb-8
         `}>
          <div className="flex-1 p-4 overflow-y-scroll gap-2 custom-scrollbar rounded-2xl overflow-x-hiddeen h-[80%]">
 
@@ -49,7 +52,7 @@ import BotOutput from "./StructureComp/BotOutput";
          <Loader loading={loading} />
           {/* Empty div for scrolling to bottom */}
 
-          {/* <div ref={messagesEndRef} /> */}
+          <div ref={messagesEndRef} />
         </div>
           
           <InputPrompt aiModel={aiModel} SetHome={SetHome} handleSendMessage={handleSendMessage} currentWidth={currentWidth}/>

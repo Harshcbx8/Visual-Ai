@@ -12,20 +12,22 @@ export default function InputPrompt({aiModel, SetHome, handleSendMessage, curren
     <div className="sm:text-sm text-xs">
         {aiModel === "Gemini" || aiModel === "VISUAL-AI"? (
 
-          <div className="border theme-border lg:mx-0 mx-2  h-auto theme-bg-comp rounded-xl focus-within:ring-[1px] "
+          <div className="sticky border theme-border lg:mx-0 mx-2  h-auto theme-bg-comp rounded-xl focus-within:ring-[1px] "
            tabIndex="0">
             
             <div className="relative flex items-center pb-10">
               <textarea
                 id="chatInput"
                 rows="2"
-                className="flex-1 p-4 resize-none overflow-hidden theme-bg-comp rounded-xl outline-none border-none focus:ring-0 focus:outline-none"
+                className="flex-1 p-4 resize-none overflow-hidden theme-bg-comp rounded-xl outline-none border-none focus:ring-0 focus:outline-none  max-h-[300px] 
+                  overflow-y-auto custom-scrollbar"
                 placeholder="Enter your prompt..."
                 onChange={(e) => setInput(e.target.value)}
                 value={input}
                 onInput={(e) => {
-                  e.target.style.height = "auto"; // Reset height
-                  e.target.style.height = `${e.target.scrollHeight}px`; // Set height based on content
+                    e.target.style.height = 'auto';
+                    const newHeight = Math.min(e.target.scrollHeight, 300);
+                    e.target.style.height = `${newHeight}px`;// Set height based on content
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {

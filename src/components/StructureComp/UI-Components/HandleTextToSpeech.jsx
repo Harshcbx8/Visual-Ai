@@ -17,9 +17,20 @@ export default function HandleTextToSpeech({ message }) {
   }, []);
 
   const handleTextToSpeech = (text, messageId) => {
-  speechSynthesis.cancel(); // Stop previous speech if any
-  setSpeakingMessageId(null);
-  setIsSpeaking(false);
+if (speakingMessageId === messageId && speechSynthesis.speaking) {
+    speechSynthesis.cancel();
+    setSpeakingMessageId(null);
+    setIsSpeaking(false);
+    return;
+  }
+
+  // 2️⃣ If some other message is speaking → stop it (but don't return)
+  if (speechSynthesis.speaking) {
+    speechSynthesis.cancel();
+    setSpeakingMessageId(null);
+    setIsSpeaking(false);
+    // and *continue* to start the new one below
+  }
 
   const tempDiv = document.createElement("div");
   tempDiv.innerHTML = DOMPurify.sanitize(text);
@@ -42,7 +53,7 @@ export default function HandleTextToSpeech({ message }) {
     }
   };
 
-
+  
   const detectLanguage = (text) => {
     const hindiPattern = /[\u0900-\u097F]/;
     const englishPattern = /^[A-Za-z0-9.,!?'"() ]+$/;

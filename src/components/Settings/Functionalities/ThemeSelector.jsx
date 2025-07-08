@@ -1,18 +1,26 @@
 import { useEffect, useState } from "react";
 
 export default function ThemeSelector() {
-  const [theme, setTheme] = useState(() => {
-    // Read from localStorage initially
-    return localStorage.getItem("theme") || "dark";
-  });
+  const [theme, setTheme] = useState(null); // initially null to prevent immediate overriding
 
-  // Set data-theme attribute and persist to localStorage
+  // Load saved theme AFTER component mounts
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    setTheme(savedTheme);
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  }, []);
+
+  // Update theme when user selects
+  useEffect(() => {
+    if (theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("theme", theme);
+    }
   }, [theme]);
 
   const options = ["dark", "light", "glass"];
+
+  if (!theme) return null; // Optional: render nothing until theme is loaded to avoid flicker
 
   return (
     <div className="sm:text-sm text-xs space-y-2 w-full">

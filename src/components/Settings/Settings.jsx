@@ -2,6 +2,7 @@
 import ModelManagementPanel from './ModelManagementPanel';
 import GeneralSettingsPanel from './GeneralSettingsPanel';
 import CustomizeModelPanel from './CustomizeModelPanel';
+import { IoCloseSharp } from "react-icons/io5";
 
 export default function Settings({
   modalOpen,
@@ -13,23 +14,23 @@ export default function Settings({
   return (
     <>
       {modalOpen && (
-        <div className="absolute inset-0 flex items-center justify-center z-50">
-          <div className="theme-bg theme-text rounded-md shadow-xl sm:w-4xl ml-2 mr-2 sm:text-sm w-[95%] theme-border border text-xs flex">
+        <div className="absolute m-auto inset-0 flex items-center justify-center h-fit lg:w-4xl z-50">
+          <div className="theme-bg theme-text rounded-md shadow-xl w-full ml-2 mr-2 sm:text-sm theme-border border text-xs flex">
             
             {/* Sidebar */}
-            <aside className="theme-bg-comp w-1/4 p-4 space-y-2 rounded-l-md border-r theme-border sm:text-sm text-xs" >
+            <aside className="theme-bg-comp p-4 space-y-2 rounded-l-md border-r theme-border sm:text-sm text-xs" >
               {settingsSections.map((section) => (
                 <button
                   key={section.key}
                   onClick={() => setActiveSection(section.key)}
-                  className={`flex items-center sm:justify-start justify-center  p-2 rounded cursor-pointer sm:text-sm text-lg w-full ${
+                  className={`flex items-center sm:justify-start justify-center p-2 rounded cursor-pointer sm:text-sm text-lg w-full ${
                     activeSection === section.key
                       ? "theme-button2 font-semibold scale-105"
                       : "theme-button2"
                   }`}
                 > 
                   {section.icon}
-                  <span className="ml-2  sm:text-sm sm:block hidden  text-xs">{section.key}</span>
+                  <span className="sm:ml-2 sm:text-sm sm:block hidden text-xs">{section.key}</span>
                 </button>
               ))}
             </aside>
@@ -49,9 +50,9 @@ export default function Settings({
             {/* Close */}
             <button
               onClick={() => setModalOpen(false)}
-              className="absolute top-2 right-2 text-white bg-red-500 px-2 py-1 rounded cursor-pointer hover:bg-red-600  sm:text-sm  text-xs"
+              className="absolute top-1 right-3 text-white theme-button2 px-2 py-1 rounded cursor-pointer text-sm "
             >
-             close
+             <IoCloseSharp />
             </button>
           </div>
         </div>

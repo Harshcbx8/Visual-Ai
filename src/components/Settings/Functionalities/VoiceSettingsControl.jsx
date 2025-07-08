@@ -12,15 +12,6 @@ export default function VoiceSettingsControl() {
     }));
   };
   
-  useEffect(() => {
-  const loadVoices = () => {
-    const voices = speechSynthesis.getVoices();
-    console.table(voices.map(v => ({ name: v.name, lang: v.lang })));
-  };
-
-  speechSynthesis.onvoiceschanged = loadVoices;
-  loadVoices();
-}, []);
 
   return (
     <div className="space-y-4 p-4 sm:text-sm text-xs theme-text">

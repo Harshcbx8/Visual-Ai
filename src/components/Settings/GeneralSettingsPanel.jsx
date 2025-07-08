@@ -1,8 +1,8 @@
 import React from 'react'
-import { FaFile, FaFileAlt, FaLink } from 'react-icons/fa';
 import { MdLink } from 'react-icons/md';
 import VoiceSettingsControl from './Functionalities/VoiceSettingsControl';
 import ThemeSelector from './Functionalities/ThemeSelector';
+import LanguageSelector from './Functionalities/LanguageSelector';
 
 
 export default function GeneralSettingsPanel() {
@@ -72,12 +72,12 @@ const Accordion = ({ title, children }) => {
       {/* Theme & Language */}
       <Accordion title="Appearance & Language">
         <ThemeSelector/>
-        <Select label="UI Language" options={["English", "हिन्दी"]} />
+        <LanguageSelector/>
         <VoiceSettingsControl/>
       </Accordion>
       {/* Danger Zone */}
       <div className="border-t theme-border pt-4 sm:text-sm  text-xs">
-        <button className="text-red-600">Delete Account</button>
+        <button className="text-red-500 cursor-pointer hover:text-red-600 ">Delete Account</button>
       </div>
     </div>
   );

@@ -233,7 +233,7 @@ body {
 }
 
 .custom-scrollbar-horizontal::-webkit-scrollbar {
-  height: 6px;
+  height: 4px;
 }
 
 .custom-scrollbar-horizontal::-webkit-scrollbar-thumb {

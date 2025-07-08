@@ -123,7 +123,7 @@ export default function Header({
   }, [setUser]);
 
   return (
-    <header className="flex justify-between items-center px-2 h-12 right-0 w-full theme-text theme-bg z-40 border-b theme-border">
+    <header className="fixed flex justify-between items-center px-2 h-12 right-0 w-full theme-text theme-bg z-40 border-b theme-border">
       {/* Left Section */}
       <div className="flex flex-nowrap w-auto gap-2">
         {/* Sidebar Toggle Button */}
@@ -191,7 +191,7 @@ export default function Header({
                 className={`cursor-pointer flex items-center flex-row justify-between gap-2 theme-text py-1 theme-shadow shadow-sm px-2 rounded-md ${
                   selectedModel === model.name
                     ? "theme-selected"
-                    : "theme-button"
+                    : "theme-button3"
                 }`}
                 onClick={() => {
                   setSelectedModel(model.name);

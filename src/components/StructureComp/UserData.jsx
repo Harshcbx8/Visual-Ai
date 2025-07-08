@@ -56,7 +56,7 @@ export default function UserData({ message, handleSendMessage, currentWidth}) {
      >
 
      <div> 
-        <div className="px-2 py-0.5 rounded themeuser">
+        <div className="px-2 rounded themeuser">
          {message.isEditing ? (
           <textarea
             className="w-full resize-none outline-none"

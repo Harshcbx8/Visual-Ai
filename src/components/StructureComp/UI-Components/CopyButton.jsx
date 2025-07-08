@@ -3,12 +3,16 @@ import { toast } from 'react-toastify';
 import DOMPurify from "dompurify";
 import { TiTick } from "react-icons/ti";
 import { MdError } from "react-icons/md";
+import { cleanResponse } from "../cleanResponse";
 export default function CopyButton({text}) {
-    
-const handleCopy = (text) => {
-   const tempDiv = document.createElement("div");
-   tempDiv.innerHTML = DOMPurify.sanitize(text);
-   const purifiedText = tempDiv.textContent || tempDiv.innerText;
+  
+  const handleCopy = (raw) => {
+    // 1) Clean the raw into Markdown
+    const md = cleanResponse(raw)
+    // 2) Sanitize & extract plain text via DOMPurify
+    const tmp = document.createElement('div')
+    tmp.innerHTML = DOMPurify.sanitize(md)
+    const purifiedText = tmp.textContent || ''
         
    navigator.clipboard.writeText(purifiedText)  .then(() => {
         toast.success("Text copied to clipboard!", {

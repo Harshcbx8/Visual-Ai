@@ -96,11 +96,11 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen, profOpen })
   return (
 
       <>
-      <div className=" absolute -z-10 w-full mt-4">
+      <div className=" absolute -z-10 w-full mt-16">
       {visualFullForm}
       </div>
 
-      <div className={`${profOpen? "-z-10" : "z-0" }  absolute mt-[6rem] flex flex-col items-center justify-center  p-8 transition-all duration-300  ${(isSideBarOpen && width>901)? "w-[80%]" : "w-full"} h-fit `}>
+      <div className={`${profOpen? "-z-10" : "z-0" }  absolute mt-[6rem] flex flex-col items-center justify-center  p-8 transition-all duration-300  ${(isSideBarOpen && width>901)? "w-[80%]" : "w-full"} h-[72vh] `}>
       
       
       <motion.div
