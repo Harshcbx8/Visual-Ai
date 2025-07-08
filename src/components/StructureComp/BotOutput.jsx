@@ -3,7 +3,7 @@ import { RiRobot3Fill } from 'react-icons/ri';
 import { LuBrainCircuit } from 'react-icons/lu';
 import CopyButton from './UI-Components/CopyButton';
 import LikeDislikeButtons from "./UI-Components/LikeDislikeButtons";
-import HandleTextToSpeech from "./UI-Components/handleTextToSpeech";
+import HandleTextToSpeech from "../StructureComp/UI-Components/HandleTextToSpeech";
 
 export default function BotOutput({ message, currentWidth }) {
  
