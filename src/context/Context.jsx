@@ -1,7 +1,6 @@
 import { createContext, useState } from "react";
 import run from "../config/gemini";
 
-
 export const Context = createContext();
 
 const ContextProvider = (props) => {
@@ -24,7 +23,6 @@ const ContextProvider = (props) => {
 
   // Animation states
   const [globeSpeed, setGlobeSpeed] = useState(0.02);
-  const [globeSpeaking, setGlobeSpeaking] = useState(false);
   const [particleSpeed, setParticleSpeed] = useState(0.015);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
@@ -93,7 +91,7 @@ const ContextProvider = (props) => {
     // Typing animation: reveal response character by character
     let currentText = "";
     const responseChars = [...formattedResponse];
-    const speed = responseChars.length > 100 ? 1 : 20;
+    const speed = responseChars.length > 400 ? 0.5 : 10;
 
     responseChars.forEach((char, index) => {
       setTimeout(() => {
@@ -139,7 +137,6 @@ const ContextProvider = (props) => {
     setMessages,
     isTyping,
     globeSpeed,
-    globeSpeaking,
     particleSpeed,
     isSpeaking,
     setIsSpeaking,

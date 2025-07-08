@@ -6,6 +6,8 @@ import LikeDislikeButtons from "./UI-Components/LikeDislikeButtons";
 import HandleTextToSpeech from "../StructureComp/UI-Components/HandleTextToSpeech";
 
 export default function BotOutput({ message, currentWidth }) {
+  
+
  
   return (
     <div className="themebot w-fit max-w-[100%] sm:text-sm text-xs"
@@ -27,17 +29,23 @@ export default function BotOutput({ message, currentWidth }) {
                <LuBrainCircuit className=" text-sm sm:text-lg opacity-75" />
                <span className="ml-2">Thinking....</span>
               </span>
-            ) : !message.text? (
-                  <RiRobot3Fill className="text-sm sm:text-lg ml-1" />
-             
-           ):(
+            ):(
           <div className="px-2 pb-1 rounded-lg custom-scrollbar-horizontal overflow-x-visible">
-              <MarkdownWithCopy text={message.text} />
-            <div className={`icons-container  flex gap-0.5 ${currentWidth > 520 ? "opacity-0 transition-opacity duration-300" : "opacity-100"}`}    >                  
-              <CopyButton text={message.text} />
-              <HandleTextToSpeech message={message} />
-              <LikeDislikeButtons />
-            </div>
+              {message.text && ( 
+                <>
+                <div className="flex gap-1">
+                <RiRobot3Fill className="text-sm sm:text-lg mt-1" />
+                <MarkdownWithCopy text={message.text} />
+                </div>
+                <div className={`icons-container flex gap-0.5 ${currentWidth > 520 ? "opacity-0 transition-opacity duration-300" : "opacity-100"}`}    >                  
+                    <CopyButton text={message.text} />
+                    <HandleTextToSpeech message={message} />
+                    <LikeDislikeButtons />
+                </div>
+                </>
+              )}
+               
+            
          </div>
           )}
       </div>

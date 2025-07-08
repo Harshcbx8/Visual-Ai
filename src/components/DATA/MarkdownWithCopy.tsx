@@ -103,7 +103,7 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
           <div className="relative group my-4">
             <button
               onClick={() => void navigator.clipboard.writeText(codeString)}
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-xs theme-button2 p-2 rounded z-50 cursor-pointer"
+              className="absolute top-2 right-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity text-xs theme-button2 p-2 rounded z-50 cursor-pointer"
             >
               <FaRegCopy/>
             </button>

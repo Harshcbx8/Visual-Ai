@@ -13,18 +13,13 @@ export default function Core({isAuthOpen, home, selectedModel, width, isSideBarO
   return (
     <div>
      {home && <DefaultPage aiModel={selectedModel} width={width} isSideBarOpen={isSideBarOpen} profOpen={profOpen}/>}
-
-     
-      
        
       {/* Auth */}
       {(!user && isAuthOpen) && <Auth closeAuth={toggleAuth} setUser={setUser} />}
 
-
       {/* Main Structure */}
-
-      
       {modalOpen && <Settings modalOpen={modalOpen} settingsSections={settingsSections} activeSection={activeSection} setActiveSection={setActiveSection} setModalOpen={setModalOpen}/> }
+      
       <Structure currentWidth={width} aiModel={selectedModel}  SetHome={SetHome}/>
 
        {/* Conditionally Render TheVISAI */}

@@ -86,9 +86,9 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen, profOpen })
       transition={{ duration: 0.6, ease: "easeInOut" }} // Smooth transition
       className="text-center mb-6"
     >
-      <h2 className="text-2xl font-medium ">VISUAL</h2>
-      <p className="text-gray-400 font-thin text-md">
-        <strong>Visualized Interaction Simulated User-friendly Adaptive Learning</strong>
+      <h2 className="sm:text-xl text-lg font-medium ">VISUAL</h2>
+      <p className="text-gray-400 font-thin">
+        <strong>Visualized Interaction Simulate User‑Centric Adaptive Learning</strong>
       </p>
   </motion.div>
   );
@@ -96,11 +96,11 @@ export default function DefaultPage({ aiModel, width, isSideBarOpen, profOpen })
   return (
 
       <>
-      <div className=" absolute -z-10 w-full mt-16">
+      <div className=" absolute -z-10 w-full mt-8 sm:text-sm text-xs">
       {visualFullForm}
       </div>
 
-      <div className={`${profOpen? "-z-10" : "z-0" }  absolute mt-[6rem] flex flex-col items-center justify-center  p-8 transition-all duration-300  ${(isSideBarOpen && width>901)? "w-[80%]" : "w-full"} h-[72vh] `}>
+      <div className={`${profOpen? "-z-10" : "z-0" }  absolute mt-[2rem] flex flex-col items-center justify-center  p-8 transition-all duration-300  ${(isSideBarOpen && width>901)? "w-[80%]" : "w-full"} h-[72vh] `}>
       
       
       <motion.div

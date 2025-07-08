@@ -12,10 +12,10 @@ export default function InputPrompt({aiModel, SetHome, handleSendMessage, curren
     <div className="sm:text-sm text-xs">
         {aiModel === "Gemini" || aiModel === "VISUAL-AI"? (
 
-          <div className="sticky border theme-border lg:mx-0 mx-2  h-auto theme-bg-comp rounded-xl focus-within:ring-[1px] "
+          <div className="sticky border theme-border lg:mx-0 mx-2 h-auto theme-bg-comp rounded-xl focus-within:ring-[1px] "
            tabIndex="0">
             
-            <div className="relative flex items-center pb-10">
+            <div className="relative flex items-center pb-8">
               <textarea
                 id="chatInput"
                 rows="2"
