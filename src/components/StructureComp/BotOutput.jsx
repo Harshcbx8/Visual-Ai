@@ -10,7 +10,7 @@ export default function BotOutput({ message, currentWidth }) {
 
  
   return (
-    <div className="themebot w-fit max-w-[100%] sm:text-sm text-xs"
+    <div className="themebot w-fit max-w-[100%] sm:text-sm text-xs "
             onMouseEnter={(e) => {
               if (currentWidth > 520) {
                 e.currentTarget.querySelector(".icons-container").style.opacity = 1;
@@ -23,7 +23,7 @@ export default function BotOutput({ message, currentWidth }) {
             }}
     >      
          
-       <div className="overflow-x-scroll overflow-y-hidden custom-scrollbar-horizontal" >
+       <div className="overflow-x-visible overflow-y-hidden custom-scrollbar-horizontal w-full" >
         {message.isLoading?(
                <span className="flex items-center theme-text animate-pulse">
                <LuBrainCircuit className=" text-sm sm:text-lg opacity-75" />

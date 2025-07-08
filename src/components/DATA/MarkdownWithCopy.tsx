@@ -40,7 +40,7 @@ const backgroundMap: Record<keyof typeof prismThemeMap, React.CSSProperties> = {
     padding: '1rem',
     borderRadius: '0.5rem',
     margin: 0,
-    overflowX: 'auto',
+    overflowX: 'scroll',
     whiteSpace: 'pre',
     // let Prism’s default dark bg show
   },
@@ -48,7 +48,7 @@ const backgroundMap: Record<keyof typeof prismThemeMap, React.CSSProperties> = {
     padding: '1rem',
     borderRadius: '0.5rem',
     margin: 0,
-    overflowX: 'auto',
+    overflowX: 'scroll',
     whiteSpace: 'pre',
     // Prism’s default light bg is okay
   },
@@ -56,7 +56,7 @@ const backgroundMap: Record<keyof typeof prismThemeMap, React.CSSProperties> = {
     padding: '1rem',
     borderRadius: '0.5rem',
     margin: 0,
-    overflowX: 'auto',
+    overflowX: 'scroll',
     whiteSpace: 'pre',
     background: 'rgba(255 255 255/0.03)',
     boxShadow: '0 2px 4px rgb(0,0,0,0.2)',
@@ -110,7 +110,7 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
             <SyntaxHighlighter
               language={lang}
               style={prismStyle}          
-              className="custom-scrollbar-horizontal"
+              className="custom-scrollbar-horizontal overflow-x-scroll"
               PreTag="div"
               customStyle={prismBgStyle}
               // customStyle={{
@@ -183,7 +183,7 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
   }
 
   return (
-    <div className="py-0.5 rounded-lg">
+    <div className="py-0.5 rounded-lg w-full">
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
         rehypePlugins={[rehypeRaw]}

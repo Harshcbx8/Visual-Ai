@@ -9,12 +9,12 @@ import BotOutput from "./StructureComp/BotOutput";
      const messagesEndRef = useRef(null);
      const {onSent, setInput, input, messages, setMessages, isTyping, loading} = useContext(Context);
        
-      //  // whenever typing stops, scroll to bottom
-      //   useEffect(() => {
-      //     if (!isTyping || setInput!=null) {
-      //       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      //     }
-      //   }, [isTyping]);
+       // whenever typing stops, scroll to bottom
+        useEffect(() => {
+          if (!isTyping || setInput!=null) {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+          }
+        }, [isTyping]);
 
       const handleSendMessage = async (customText = null) => {
         const messageText = customText || input.trim();
