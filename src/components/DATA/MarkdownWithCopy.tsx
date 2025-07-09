@@ -1,5 +1,5 @@
 // src/components/MarkdownWithCopy.tsx
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ReactMarkdown, { Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
@@ -12,6 +12,7 @@ import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { FaRegCopy } from 'react-icons/fa'
 import { cleanResponse } from '../StructureComp/cleanResponse'
+import { Context } from '../../context/Context'
 
 PrismLight.registerLanguage('javascript', js)
 PrismLight.registerLanguage('typescript', tsLang)
@@ -65,6 +66,55 @@ const backgroundMap: Record<keyof typeof prismThemeMap, React.CSSProperties> = {
 }
 
 export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
+    const {
+    setMessages,
+    setIsTyping,
+    setParticleSpeed,
+    setGlobeSpeed,
+  } = useContext(Context);
+
+  // typing state
+  const [displayedText, setDisplayedText] = useState("");
+  useEffect(() => {
+    const cleaned = cleanResponse(text);
+    const chars = [...cleaned];
+    const speed = chars.length > 800 ? 0 : 5;
+    let current = "";
+    const timers: number[] = [];
+
+    // clear buffer & mark “typing” in context
+    setDisplayedText("");
+    setIsTyping(true);
+
+    chars.forEach((ch, i) => {
+      const t = window.setTimeout(() => {
+        current += ch;
+        setDisplayedText(current);
+
+        // if this is the last character, reset the context typing flags
+        if (i === chars.length - 1) {
+          setIsTyping(false);
+          setParticleSpeed(0.015);
+          setGlobeSpeed(0.02);
+
+          //—and also update your global messages array:
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.isLoading
+                ? { ...msg , text: current }
+                : msg
+            )
+          );
+        }
+      }, i * speed);
+      timers.push(t);
+    });
+
+    return () => {
+      timers.forEach((t) => clearTimeout(t));
+    };
+  }, [text, setIsTyping, setParticleSpeed, setGlobeSpeed, setMessages]);
+
 
   // 2️⃣ Read your theme exactly as you already do:
   const theme = typeof document !== 'undefined'
@@ -75,21 +125,8 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
   const prismStyle   = prismThemeMap[theme]  
   const prismBgStyle = backgroundMap[theme]
   
-  // 1) Convert your <div class='code-block'><pre>… HTML into real markdown fences
-  // 2) Turn <br> into line breaks
-  const cleaned = cleanResponse(text);
-  
-  
-    //   text
-    // // code‑block wrapper → ```lang
-    // .replace(
-    //   /<div class=['"]code-block['"]>\s*<pre>\s*<code class=['"]language-(\w+)['"]>/g,
-    //   '```$1\n'
-    // )
-    // // closing tags → ```
-    // .replace(/<\/code>\s*<\/pre>\s*<\/div>/g, '\n```')
-    // // any <br> → newline
-    // .replace(/<br\s*\/?>/gi, '\n')
+  const cleaned = displayedText;
+
 
   const components: Components = {
     code: (props: any) => {
@@ -113,13 +150,6 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
               className="custom-scrollbar-horizontal overflow-x-scroll"
               PreTag="div"
               customStyle={prismBgStyle}
-              // customStyle={{
-              //   padding: '1rem',
-              //   borderRadius: '0.5rem',
-              //   margin: 0,
-              //   overflowX: 'auto',
-              //   whiteSpace: 'pre',
-              // } as any}
               {...rest}
             >
               {codeString}

@@ -11,17 +11,8 @@ const ContextProvider = (props) => {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
-  // Inside Context.js
-  const [voiceSettings, setVoiceSettings] = useState({
-  rate: 1,
-  pitch: 1,
-  volume: 1,
-  gender: "female", // or "male"
-  });
+  const [voiceSettings, setVoiceSettings] = useState({rate: 1, pitch: 1, volume: 1,gender: "female"});
 
-
-
-  // Animation states
   const [globeSpeed, setGlobeSpeed] = useState(0.02);
   const [particleSpeed, setParticleSpeed] = useState(0.015);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -74,58 +65,56 @@ const ContextProvider = (props) => {
     let formattedResponse = response.replace(/```(\w+)?\n([\s\S]+?)```/g, (match, lang, code) => {
       return `<div class='code-block'><pre><code class='language-${lang || "plaintext"}'>${code}</code></pre></div>`;
     });
+    
     formattedResponse = formatText(formattedResponse);
 
-    // Replace loading message with actual response
-    setMessages((prev) => {
-      const updated = prev.map((msg) =>
-        msg.isLoading ? { ...msg, isLoading: false, isBot: true } : msg
+    // Single pass: find the loading placeholder and replace it
+      setMessages(prev =>
+        prev.map(msg =>
+          msg.isLoading
+            ? { ...msg, isLoading: false, isBot: true, text: formattedResponse }
+            : msg
+        )
       );
-      // Add a new message for typing animation
-      return [
-        ...updated,
-        { text: "", type: "bot", isLoading: false },
-      ];
-    });
 
-    // Typing animation: reveal response character by character
-    let currentText = "";
-    const responseChars = [...formattedResponse];
-    const speed = responseChars.length > 400 ? 0.5 : 10;
+  //   // Typing animation: reveal response character by character
+  //   let currentText = "";
+  //   const responseChars = [...formattedResponse];
+  //   const speed = responseChars.length > 400 ? 0.5 : 10;
 
-    responseChars.forEach((char, index) => {
-      setTimeout(() => {
-        currentText += char;
-        setMessages((prev) => {
-          const updated = [...prev];
-          updated[updated.length - 1] = {
-            ...updated[updated.length - 1],
-            text: currentText,
-          };
-          return updated;
-        });
-        if (index === responseChars.length - 1) {
-          setIsTyping(false);
-          setParticleSpeed(0.015);
-          setGlobeSpeed(0.02);
-        }
-      }, index * speed);
-    });
+  //   responseChars.forEach((char, index) => {
+  //     setTimeout(() => {
+  //       currentText += char;
+  //       setMessages((prev) => {
+  //         const updated = [...prev];
+  //         updated[updated.length - 1] = {
+  //           ...updated[updated.length - 1],
+  //           text: currentText,
+  //         };
+  //         return updated;
+  //       });
+  //       if (index === responseChars.length - 1) {
+  //         setIsTyping(false);
+  //         setParticleSpeed(0.015);
+  //         setGlobeSpeed(0.02);
+  //       }
+  //     }, index * speed);
+  //   });
   };
 
   // Regenerate response for a given message
-  const regenerateResponse = async (currentMessage) => {
-    if (isTyping) return;
-    setLoading(true);
-    setIsTyping(true);
-    await onSent(currentMessage);
-  };
+  // const regenerateResponse = async (currentMessage) => {
+  //   if (isTyping) return;
+  //   setLoading(true);
+  //   setIsTyping(true);
+  //   await onSent(currentMessage);
+  // };
 
   const contextValue = {
     previousPrompt,
     setPreviousPrompt,
     onSent,
-    regenerateResponse,
+    // regenerateResponse,
     setRecentPrompt,
     recentPrompt,
     showResult,
@@ -141,7 +130,10 @@ const ContextProvider = (props) => {
     isSpeaking,
     setIsSpeaking,
     voiceSettings,
-    setVoiceSettings
+    setVoiceSettings,
+    setGlobeSpeed,
+    setParticleSpeed,
+    setIsTyping,
   };
 
   return <Context.Provider value={contextValue}>{props.children}</Context.Provider>;
