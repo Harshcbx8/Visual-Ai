@@ -5,7 +5,7 @@ export default function ThemeSelector() {
 
   // Load saved theme AFTER component mounts
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "dark";
+    const savedTheme = localStorage.getItem("theme") || "glass";
     setTheme(savedTheme);
     document.documentElement.setAttribute("data-theme", savedTheme);
   }, []);

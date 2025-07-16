@@ -14,7 +14,7 @@ export default function Settings({
   return (
     <>
       {modalOpen && (
-        <div className="absolute m-auto inset-0 flex items-center justify-center h-fit lg:w-4xl z-50">
+        <div className="absolute m-auto inset-0 flex items-center justify-center h-fit lg:w-4xl ">
           <div className="theme-bg theme-text rounded-md shadow-xl w-full ml-2 mr-2 sm:text-sm theme-border border text-xs flex">
             
             {/* Sidebar */}
@@ -50,7 +50,7 @@ export default function Settings({
             {/* Close */}
             <button
               onClick={() => setModalOpen(false)}
-              className="absolute top-1 right-3 text-white themebot px-2 py-1 rounded cursor-pointer text-sm "
+              className="absolute top-1 right-3 text-white themebot px-2 py-1 rounded cursor-pointer theme-button3 text-sm "
             >
              <IoCloseSharp />
             </button>

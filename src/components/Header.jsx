@@ -135,7 +135,7 @@ export default function Header({
           aria-label="Toggle Sidebar"
         >
           <i className="bx bx-sidebar"></i>
-          <span className={`absolute top-8 left-5 w-26 h-auto border theme-border rounded-sm p-1 sm:text-sm text-xs -translate-x-1 opacity-0 transition-all duration-300 ${
+          <span className={`absolute top-8 left-5 w-26 h-auto border theme-border rounded-sm p-1 sm:text-sm text-xs -translate-x-1 opacity-0 transition-all duration-300 z-50 ${
             onMenu ? 'opacity-100 translate-y-2 theme-bg-comp' : ''
           }`}>
             Toggle Sidebar
@@ -155,7 +155,7 @@ export default function Header({
             aria-label="New Chat"
           >
             <i className="bx bx-plus"></i>
-            <span className={`absolute top-8 w-18 h-auto border theme-border rounded-sm p-1 sm:text-sm text-xs -translate-x-1 opacity-0 transition-all duration-300 ${
+            <span className={`absolute top-8 w-18 h-auto border theme-border rounded-sm p-1 sm:text-sm text-xs -translate-x-1 opacity-0 transition-all duration-300 z-50 ${
               newChat ? 'opacity-100 translate-y-2 theme-bg-comp' : ''
             }`}>
               New Chat
@@ -239,7 +239,7 @@ export default function Header({
       {isOpen && user && (
         <div
           ref={profileRef}
-          className="absolute theme-bg-comp top-13 h-auto w-auto p-2 right-1 flex flex-col border theme-border rounded-lg"
+          className="absolute z-50 theme-bg-comp top-13 h-auto w-auto p-2 right-1 flex flex-col border theme-border rounded-lg"
         >
           <Profile
             userDetails={userDetails}

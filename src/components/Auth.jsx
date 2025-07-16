@@ -206,7 +206,7 @@ const Auth = ({ setUser, closeAuth }) => {
           </div>
           <span> Continue with Google </span>
         </button>
-        <div className="text-center font-thin h-auto w-auto">
+        <div className="text-center h-auto w-auto">
           {isSignUp ? (
             <p className="text-gray-400">Already have an account?{" "}
               <button onClick={() => setIsSignUp(false)} className=" w-auto h-auto font-medium cursor-pointer">Login</button> instead.</p>

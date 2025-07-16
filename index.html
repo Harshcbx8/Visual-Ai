@@ -15,11 +15,11 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script>
-    (function() {
-      const theme = localStorage.getItem("theme") || "dark";
-      document.documentElement.setAttribute("data-theme", theme);
-    })();
-    </script>
+  document.documentElement.setAttribute(
+    "data-theme",
+    localStorage.getItem("theme") || "glass"
+  );
+</script>
 
   </body>
 </html>

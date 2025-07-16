@@ -1,5 +1,5 @@
 // src/components/MarkdownWithCopy.tsx
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import ReactMarkdown, { Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
@@ -73,48 +73,45 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
     setGlobeSpeed,
   } = useContext(Context);
 
-  // typing state
-  const [displayedText, setDisplayedText] = useState("");
-  useEffect(() => {
-    const cleaned = cleanResponse(text);
-    const chars = [...cleaned];
-    const speed = chars.length > 1000 ? 0 : 5;
-    let current = "";
-    const timers: number[] = [];
+const [displayedText, setDisplayedText] = useState("");
+const animationRef = useRef<number | null>(null);
 
-    // clear buffer & mark “typing” in context
-    setDisplayedText("");
-    setIsTyping(true);
+useEffect(() => {
+  const cleaned = cleanResponse(text);
 
-    chars.forEach((ch, i) => {
-      const t = window.setTimeout(() => {
-        current += ch;
-        setDisplayedText(current);
+  // If text is very long or short, skip animation for performance
+  if (!cleaned || cleaned.length < 10 || cleaned.length > 1200) {
+    setDisplayedText(cleaned);
+    setIsTyping(false);
+    setParticleSpeed(0.015);
+    setGlobeSpeed(0.02);
+    return;
+  }
 
-        // if this is the last character, reset the context typing flags
-        if (i === chars.length - 1) {
-          setIsTyping(false);
-          setParticleSpeed(0.015);
-          setGlobeSpeed(0.02);
+  let i = 0;
+  setDisplayedText("");
+  setIsTyping(true);
 
-          //—and also update your global messages array:
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg.isLoading
-                ? { ...msg , text: current }
-                : msg
-            )
-          );
-        }
-      }, i * speed);
-      timers.push(t);
-    });
+  function animate() {
+    // Update every 2 characters for less re-renders
+    i += 2;
+    setDisplayedText(cleaned.slice(0, i));
+    if (i < cleaned.length) {
+      animationRef.current = requestAnimationFrame(animate);
+    } else {
+      setDisplayedText(cleaned);
+      setIsTyping(false);
+      setParticleSpeed(0.015);
+      setGlobeSpeed(0.02);
+    }
+  }
+  animationRef.current = requestAnimationFrame(animate);
 
-    return () => {
-      timers.forEach((t) => clearTimeout(t));
-    };
-  }, [text, setIsTyping, setParticleSpeed, setGlobeSpeed, setMessages]);
-
+  return () => {
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+  };
+  // Only depend on text and context setters
+}, [text, setIsTyping, setParticleSpeed, setGlobeSpeed]);
 
   // 2️⃣ Read your theme exactly as you already do:
   const theme = typeof document !== 'undefined'
@@ -139,11 +136,11 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
       // Only render block code (triple backticks) as SyntaxHighlighter
       if (!inline && codeString.split('\n').length > 1) {
         return (
-          <div className="group my-4">
+          <div className="group my-4 z-0 relative">
             <div className='relative flex justify-end top-8'>
               <button
                 onClick={() => void navigator.clipboard.writeText(codeString)}
-                className="sm:opacity-0 sm:group-hover:opacity-100 transition-opacity text-xs theme-button2 p-2 rounded z-50 cursor-pointer"
+                className="sm:opacity-0 sm:group-hover:opacity-100 transition-opacity text-xs theme-button2 p-2 rounded z-10 cursor-pointer"
               >
                 <FaRegCopy />
               </button>
@@ -165,7 +162,7 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
       // Inline code (single backtick or short code) is rendered inline
       return (
         <code
-          className="bg-gray-100 text-red-600 px-1 rounded whitespace-pre-wrap"
+          className="bg-gray-100 text-green-500 px-1 rounded whitespace-pre-wrap"
           {...rest}
         >
           {children}

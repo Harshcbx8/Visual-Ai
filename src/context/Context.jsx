@@ -69,14 +69,15 @@ const ContextProvider = (props) => {
     formattedResponse = formatText(formattedResponse);
 
     // Single pass: find the loading placeholder and replace it
-      setMessages(prev =>
-        prev.map(msg =>
-          msg.isLoading
-            ? { ...msg, isLoading: false, isBot: true, text: formattedResponse }
-            : msg
-        )
-      );
-
+    // Remove setMessages update from inside the typing animation
+    setMessages(prev =>
+      prev.map(msg =>
+        msg.isLoading
+          ? { ...msg, isLoading: false, isBot: true, text: formattedResponse }
+          : msg
+      )
+    );
+    // Do not update setMessages in MarkdownWithCopy!
   };
   
   const contextValue = {

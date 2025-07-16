@@ -7,6 +7,7 @@ function LeftSidebar({ isOpen, user, SetHome }) {
 
   const loadPrompt = async (prompt) => {
     setRecentPrompt(prompt);
+    SetHome(false);
     await onSent(prompt);
   };
 
