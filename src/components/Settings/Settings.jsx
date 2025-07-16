@@ -25,8 +25,8 @@ export default function Settings({
                   onClick={() => setActiveSection(section.key)}
                   className={`flex items-center sm:justify-start justify-center p-2 rounded cursor-pointer sm:text-sm text-lg w-full ${
                     activeSection === section.key
-                      ? "theme-button2 font-semibold scale-105"
-                      : "theme-button2"
+                      ? "theme-button font-semibold scale-105"
+                      : "theme-button2 "
                   }`}
                 > 
                   {section.icon}
@@ -50,7 +50,7 @@ export default function Settings({
             {/* Close */}
             <button
               onClick={() => setModalOpen(false)}
-              className="absolute top-1 right-3 text-white theme-button2 px-2 py-1 rounded cursor-pointer text-sm "
+              className="absolute top-1 right-3 text-white themebot px-2 py-1 rounded cursor-pointer text-sm "
             >
              <IoCloseSharp />
             </button>

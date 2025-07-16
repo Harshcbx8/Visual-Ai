@@ -6,7 +6,7 @@ import { useContext } from "react";
 import { Context } from "../../context/Context";
 
 export default function InputPrompt({aiModel, SetHome, handleSendMessage, currentWidth}) {
-  const {setInput, input, isTyping} = useContext(Context);
+  const {setInput, input, isTyping, loading} = useContext(Context);
   
   return (
     <div className="sm:text-sm text-xs">
@@ -54,9 +54,9 @@ export default function InputPrompt({aiModel, SetHome, handleSendMessage, curren
                   SetHome(false)
                 }
               }
-                disabled={isTyping || !input.trim()} // Disable while AI is typing
+                disabled={isTyping || loading || !input.trim()} // Disable while AI is typing
               >
-                {isTyping ? <AiOutlineLoading className="animate-spin" /> : <IoMdArrowRoundUp />}
+                {isTyping || loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdArrowRoundUp />}
               </button>
             </div>
           </div>

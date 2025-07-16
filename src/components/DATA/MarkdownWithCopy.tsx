@@ -59,7 +59,7 @@ const backgroundMap: Record<keyof typeof prismThemeMap, React.CSSProperties> = {
     margin: 0,
     overflowX: 'scroll',
     whiteSpace: 'pre',
-    background: 'rgba(255 255 255/0.03)',
+    background: 'rgba(255, 255, 255, 0.03)',
     boxShadow: '0 2px 4px rgb(0,0,0,0.2)',
     backdropFilter: 'blur(10px)',
   },
@@ -78,7 +78,7 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
   useEffect(() => {
     const cleaned = cleanResponse(text);
     const chars = [...cleaned];
-    const speed = chars.length > 800 ? 0 : 5;
+    const speed = chars.length > 1000 ? 0 : 5;
     let current = "";
     const timers: number[] = [];
 
@@ -121,6 +121,7 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
     ? document.documentElement.getAttribute('data-theme') as keyof typeof prismThemeMap
     : 'dark'
 
+    
   // 3️⃣ Lookup the Prism style + container style:
   const prismStyle   = prismThemeMap[theme]  
   const prismBgStyle = backgroundMap[theme]
@@ -130,23 +131,26 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
 
   const components: Components = {
     code: (props: any) => {
-      const { inline, className, children, ...rest } = props
-      const codeString = String(children).trimEnd()
-      const match = /language-(\w+)/.exec(className || '')
-      const lang = match?.[1] || 'text'
+      const { inline, className, children, ...rest } = props;
+      const codeString = String(children).trimEnd();
+      const match = /language-(\w+)/.exec(className || '');
+      const lang = match?.[1] || 'text';
 
-      if (!inline) {
+      // Only render block code (triple backticks) as SyntaxHighlighter
+      if (!inline && codeString.split('\n').length > 1) {
         return (
-          <div className="relative group my-4">
-            <button
-              onClick={() => void navigator.clipboard.writeText(codeString)}
-              className="absolute top-2 right-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity text-xs theme-button2 p-2 rounded z-50 cursor-pointer"
-            >
-              <FaRegCopy/>
-            </button>
+          <div className="group my-4">
+            <div className='relative flex justify-end top-8'>
+              <button
+                onClick={() => void navigator.clipboard.writeText(codeString)}
+                className="sm:opacity-0 sm:group-hover:opacity-100 transition-opacity text-xs theme-button2 p-2 rounded z-50 cursor-pointer"
+              >
+                <FaRegCopy />
+              </button>
+            </div>
             <SyntaxHighlighter
               language={lang}
-              style={prismStyle}          
+              style={prismStyle}
               className="custom-scrollbar-horizontal overflow-x-scroll"
               PreTag="div"
               customStyle={prismBgStyle}
@@ -155,9 +159,10 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
               {codeString}
             </SyntaxHighlighter>
           </div>
-        )
+        );
       }
 
+      // Inline code (single backtick or short code) is rendered inline
       return (
         <code
           className="bg-gray-100 text-red-600 px-1 rounded whitespace-pre-wrap"
@@ -165,7 +170,7 @@ export default function MarkdownWithCopy({ text }: MarkdownWithCopyProps) {
         >
           {children}
         </code>
-      )
+      );
     },
     p: ({ children, ...p }) => (
       <p className="mb-2 leading-relaxed prose prose-sm" {...p}>

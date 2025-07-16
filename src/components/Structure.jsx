@@ -16,6 +16,7 @@ import BotOutput from "./StructureComp/BotOutput";
           }
         }, [isTyping]);
 
+
       const handleSendMessage = async (customText = null) => {
         const messageText = customText || input.trim();
         if (!messageText || isTyping) return;

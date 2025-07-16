@@ -15,7 +15,7 @@ const Profile = ({userDetails, settingsSections, setActiveSection,
   const { name, email } = userDetails;
 
   return (
-    <div className="flex flex-col justify-evenly gap-1 sm:text-sm text-xs border-b-2 theme-border mb-2 theme-bg-comp  z-99">
+    <div className="flex flex-col justify-evenly gap-1 sm:text-sm text-xs border-b-2 theme-border mb-2 theme-bg-comp z-99">
       <div className="flex items-center justify-between">
         <p className='text-sm' >Welcome</p>
         <p>{name}</p>

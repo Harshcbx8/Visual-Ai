@@ -11,7 +11,7 @@ import CopyButton from "./UI-Components/CopyButton";
 export default function UserData({ message, handleSendMessage, currentWidth}) {
    const [editingMessageId, setEditingMessageId] = useState(null); // ID of the message being edited
    const [editedText, setEditedText] = useState(""); // Text being edited
-   const {setMessages, isTyping} = useContext(Context);
+   const {setMessages, isTyping, loading} = useContext(Context);
    
     const editResponse = (messageId, text) => {
         setEditingMessageId(messageId);
@@ -85,7 +85,7 @@ export default function UserData({ message, handleSendMessage, currentWidth}) {
                          disabled={isTyping || !editedText.trim()} // Ensure this uses editedText, not input
                         >
                     
-                        {isTyping ? <AiOutlineLoading className="animate-spin" /> : <IoMdArrowRoundUp />}
+                        {isTyping || loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdArrowRoundUp />}
                      </button>
                     ):(
                       <button

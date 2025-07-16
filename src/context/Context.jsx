@@ -77,39 +77,8 @@ const ContextProvider = (props) => {
         )
       );
 
-  //   // Typing animation: reveal response character by character
-  //   let currentText = "";
-  //   const responseChars = [...formattedResponse];
-  //   const speed = responseChars.length > 400 ? 0.5 : 10;
-
-  //   responseChars.forEach((char, index) => {
-  //     setTimeout(() => {
-  //       currentText += char;
-  //       setMessages((prev) => {
-  //         const updated = [...prev];
-  //         updated[updated.length - 1] = {
-  //           ...updated[updated.length - 1],
-  //           text: currentText,
-  //         };
-  //         return updated;
-  //       });
-  //       if (index === responseChars.length - 1) {
-  //         setIsTyping(false);
-  //         setParticleSpeed(0.015);
-  //         setGlobeSpeed(0.02);
-  //       }
-  //     }, index * speed);
-  //   });
   };
-
-  // Regenerate response for a given message
-  // const regenerateResponse = async (currentMessage) => {
-  //   if (isTyping) return;
-  //   setLoading(true);
-  //   setIsTyping(true);
-  //   await onSent(currentMessage);
-  // };
-
+  
   const contextValue = {
     previousPrompt,
     setPreviousPrompt,

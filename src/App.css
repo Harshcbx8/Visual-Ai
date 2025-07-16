@@ -26,17 +26,17 @@
 [data-theme="light"] {
   --bg-color: #FFFFFF;
   --text-color: black;
-  --button-bg: rgb(245, 245, 245, 0.5);
-  --button-hover: rgb(230, 230, 230, 0.5);
+  --button-bg: rgb(255, 255, 255, 0.5);
+  --button-hover: rgb(252, 252, 252);
   --border: rgba(16, 16, 16, 0.2);
-  --shadow-color: rgb(150, 150, 150, 0.4);
+  --shadow-color: rgb(200, 200, 200, 0.4);
   --selected-color: white;
   --scroll-bar: #ced5de;
-  --bg-component: rgb(250, 250, 250);
+  --bg-component: rgb(252, 252, 252);
   --userChatBg: black;
   --botChatBg: white;
-  --div-bg: rgb(250, 250, 250);
-  --div-hover: rgb(245, 245, 245);
+  --div-bg: rgb(253, 253, 253);
+  --div-hover: rgb(251, 251, 251);
   --login-bg: black;
   --login-text: white;
 }
@@ -157,6 +157,7 @@ body {
 .theme-button3 {
   background-color: var(--bg-color);
   color: var(--text-color);
+  border: 0px solid var(--border);
 }
 
 .theme-button3:hover {

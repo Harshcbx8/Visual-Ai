@@ -166,7 +166,7 @@ export default function Header({
         {/* Dropdown Button */}
         <button
           ref={dropdownButtonRef}
-          className=" sm:text-sm text-xs cursor-pointer h-auto w-auto border theme-border rounded-md px-2 pt-1.5 sm:pt-0.5 flex gap-1 theme-button"
+          className="sm:text-sm text-xs cursor-pointer h-auto w-auto border theme-border rounded-md px-2 pt-1.5 sm:pt-0.5 flex gap-1 theme-button"
           onClick={toggleDropdown}
           aria-haspopup="listbox"
           aria-expanded={drop}
@@ -203,7 +203,7 @@ export default function Header({
               >
                 <div className="w-fit flex flex-col justify-between items-start gap-1">
                   <span className="left-0 text-left w-full">{model.name}</span>
-                  <span className="text-xs  opacity-60">{model.description}</span>
+                  <span className="text-xs opacity-60">{model.description}</span>
                 </div>
                 {selectedModel === model.name && (
                   <IoCheckmarkCircle className="text-green-500 mr-2" />
@@ -216,7 +216,6 @@ export default function Header({
 
       {/* Profile Section */}
       <button
-        // ref={profileButtonRef}
         className={`w-auto cursor-pointer sm:text-sm text-xs ${
           user
             ? 'rounded-full p-0.5 h-auto theme-button'
@@ -236,21 +235,26 @@ export default function Header({
         
       </button>
 
-        {/* Profile Dropdown */}
-        {isOpen && user && (
-          <div
-            ref={profileRef}
-            className="absolute theme-bg-comp top-13 h-auto w-auto p-2 right-1 flex flex-col  border theme-border rounded-lg "
+      {/* Profile Dropdown */}
+      {isOpen && user && (
+        <div
+          ref={profileRef}
+          className="absolute theme-bg-comp top-13 h-auto w-auto p-2 right-1 flex flex-col border theme-border rounded-lg"
+        >
+          <Profile
+            userDetails={userDetails}
+            settingsSections={settingsSections}
+            setModalOpen={setModalOpen}
+            setActiveSection={setActiveSection}
+          />
+          <button
+            className="cursor-pointer text-xs sm:text-sm border theme-border theme-button h-auto w-full px-3 py-1 rounded-md transition duration-300"
+            onClick={handleLogout}
           >
-            <Profile userDetails={userDetails} settingsSections={settingsSections}  setModalOpen={setModalOpen} setActiveSection={setActiveSection}/>
-            <button
-              className="cursor-pointer text-xs sm:text-sm border theme-border theme-button h-auto w-full px-3 py-1 rounded-md transition duration-300"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </div>
-        )}
+            Logout
+          </button>
+        </div>
+      )}
     </header>
   );
 }

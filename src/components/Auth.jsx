@@ -158,41 +158,41 @@ const Auth = ({ setUser, closeAuth }) => {
   };
 
   return (
-    <div className="inset-0 fixed w-full h-full flex items-center justify-center bg-black z-50 sm:text-sm text-xs ">
+    <div className="inset-0 fixed w-full h-full flex items-center justify-center theme-bg-2 z-50 sm:text-sm text-xs theme-text">
       <div className="max-w-md pl-10 pr-10 h-[80%]">
-        <h2 className="text-center h-auto sm:text-2xl text-lg font-bold text-white">
+        <h2 className="text-center h-auto sm:text-2xl text-lg font-bold">
           {isSignUp ? 'Sign Up' : 'Login'}
         </h2>
-        <p className="h-auto w-auto p-2 font-thin opacity-60 justify-self-center">
+        <p className="h-auto w-auto p-2 font-medium opacity-60 justify-self-center">
           {!isSignUp ? 'Use your email and password to sign in' : 'Create an account with your email and password'}
         </p>
         <form className="h-auto p-3" onSubmit={handleSubmit}>
           {isSignUp && (
             <div className=''>
-              <label htmlFor="firstname" className=" opacity-60 font-thin text-white">First Name</label>
-              <input type="text" name="firstname" id="firstname" value={formData.firstname} onChange={handleChange} className="mt-1 w-full px-3 py-2 bg-zinc-800 text-white rounded-md" required />
-              <label htmlFor="lastname" className=" opacity-60 font-thin text-white">Last Name</label>
-              <input type="text" name="lastname" id="lastname" value={formData.lastname} onChange={handleChange} className="mt-1 w-full px-3 py-2 bg-zinc-800 text-white rounded-md" required />
+              <label htmlFor="firstname" className=" opacity-60 font-medium">First Name</label>
+              <input type="text" name="firstname" id="firstname" value={formData.firstname} onChange={handleChange} className="mt-1 w-full px-3 py-2 theme-selected rounded-md" required />
+              <label htmlFor="lastname" className=" opacity-60 font-medium ">Last Name</label>
+              <input type="text" name="lastname" id="lastname" value={formData.lastname} onChange={handleChange} className="mt-1 w-full px-3 py-2 theme-selected rounded-md" required />
             </div>
           )}
-          <label htmlFor="email" className="opacity-60 font-thin text-white">Email</label>
-          <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="mt-1 w-full px-3 py-2 bg-zinc-800 text-white rounded-md" required />
-          <label htmlFor="password" className="opacity-60 font-thin text-white">Password</label>
-          <input type="password" name="password" id="password" value={formData.password} onChange={handleChange} className="mt-1 w-full px-3 py-2 bg-zinc-800 text-white rounded-md" required />
+          <label htmlFor="email" className="opacity-60 font-medium ">Email</label>
+          <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="mt-1 w-full px-3 py-2 theme-selected rounded-md" required />
+          <label htmlFor="password" className="opacity-60 font-medium ">Password</label>
+          <input type="password" name="password" id="password" value={formData.password} onChange={handleChange} className="mt-1 w-full px-3 py-2 theme-selected rounded-md" required />
           {isSignUp && (
             <div>
-              <label htmlFor="confirmPassword" className="opacity-60 font-thin text-white">Confirm Password</label>
-              <input type="password" name="confirmPassword" id="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="mt-1 w-full px-3 py-2 bg-zinc-800 text-white rounded-md" required />
+              <label htmlFor="confirmPassword" className="opacity-60 font-medium ">Confirm Password</label>
+              <input type="password" name="confirmPassword" id="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="mt-1 w-full px-3 py-2 theme-selected rounded-md" required />
             </div>
           )}
-          <button type="submit" className="w-full py-2 mt-4 bg-white text-black font-medium rounded-md hover:bg-zinc-200 transition duration-300 cursor-pointer" disabled={loading}>
+          <button type="submit" className="w-full py-2 mt-4 theme-button rounded-md transition duration-300 cursor-pointer" disabled={loading}>
             {loading ? 'Please wait...' : isSignUp ? 'Sign Up' : 'Login'}
           </button>
         </form>
         <div className="flex flex-row w-full items-center justify-between gap-1"><p className="bg-gray-400 h-[2px] w-[50%]"></p> <p>OR</p> <p className="bg-gray-400 h-[2px] w-[50%]"></p></div>
         <button
           onClick={handleGoogleSignIn}
-          className="flex items-center justify-center cursor-pointer w-full py-2 px-4 mt-4 mb-4 bg-white border border-gray-300 rounded-md shadow-md hover:bg-zinc-300 transition duration-300"
+          className="flex items-center justify-center cursor-pointer w-full py-2 px-4 mt-4 mb-4 rounded-md shadow-md theme-div border theme-border transition duration-300"
           disabled={loading}
         >
           <div className="mr-3">
@@ -204,18 +204,18 @@ const Auth = ({ setUser, closeAuth }) => {
               <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
             </svg>
           </div>
-          <span className="text-black"> Continue with Google </span>
+          <span> Continue with Google </span>
         </button>
-        <div className="text-center h-auto w-auto">
+        <div className="text-center font-thin h-auto w-auto">
           {isSignUp ? (
             <p className="text-gray-400">Already have an account?{" "}
-              <button onClick={() => setIsSignUp(false)} className="text-white w-auto h-auto font-bold cursor-pointer">Login</button> instead.</p>
+              <button onClick={() => setIsSignUp(false)} className=" w-auto h-auto font-medium cursor-pointer">Login</button> instead.</p>
           ) : (
             <p className="text-gray-400">Don't have an account?{" "}
-              <button onClick={() => setIsSignUp(true)} className="text-white w-auto h-auto font-bold cursor-pointer">Sign up</button> for free.</p>
+              <button onClick={() => setIsSignUp(true)} className=" w-auto h-auto font-medium cursor-pointer">Sign up</button> for free.</p>
           )}
-          <button onClick={closeAuth} className="h-auto w-auto mt-2 cursor-pointer text-zinc-100" >
-            <p className="hover:text-zinc-300">Continue without {!isSignUp ? 'Login' : 'Sign Up'}</p>
+          <button onClick={closeAuth} className="h-auto w-auto mt-2 cursor-pointer text-zinc-300 " >
+            <p className="hover:text-zinc-400 hover:underline">Continue without {!isSignUp ? 'Login' : 'Sign Up'}</p>
           </button>
         </div>
       </div>
