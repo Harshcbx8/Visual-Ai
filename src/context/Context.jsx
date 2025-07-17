@@ -1,6 +1,21 @@
 import { createContext, useState } from "react";
 import run from "../config/gemini";
 
+const VISUAL_STATES = {
+  IDLE: {
+    globe: 0.02,
+    particle: 0.015
+  },
+  PROCESSING: {
+    globe: 0.08,    // Increased from 0.08 for more visible effect
+    particle: 0.1
+  },
+  TYPING: {
+    globe: 0.09,   // Medium speed while typing out response
+    particle: 0.09
+  }
+};
+
 export const Context = createContext();
 
 const ContextProvider = (props) => {
@@ -35,11 +50,13 @@ const ContextProvider = (props) => {
   // Send prompt to Gemini API and handle response
   const onSent = async (prompt) => {
     if (isTyping) return;
+    
+    // Set to processing speed immediately
+    setGlobeSpeed(VISUAL_STATES.PROCESSING.globe);
+    setParticleSpeed(VISUAL_STATES.PROCESSING.particle);
+    
     setLoading(true);
     setShowResult(true);
-    setIsTyping(true);
-    setGlobeSpeed(0.08);
-    setParticleSpeed(0.08);
 
     // Add loading message
     setMessages((prev) => [
@@ -51,9 +68,16 @@ const ContextProvider = (props) => {
     try {
       response = await run(prompt || input);
       if (!response) throw new Error("No response from the server.");
+      
+      // Keep processing speed until typing starts
+      setIsTyping(true);
+      
     } catch (error) {
       console.error("Error fetching response:", error);
       response = "Error: Unable to fetch data.";
+      // Reset speeds on error
+      setGlobeSpeed(VISUAL_STATES.IDLE.globe);
+      setParticleSpeed(VISUAL_STATES.IDLE.particle);
     }
 
     setLoading(false);
@@ -104,6 +128,7 @@ const ContextProvider = (props) => {
     setGlobeSpeed,
     setParticleSpeed,
     setIsTyping,
+    VISUAL_STATES
   };
 
   return <Context.Provider value={contextValue}>{props.children}</Context.Provider>;

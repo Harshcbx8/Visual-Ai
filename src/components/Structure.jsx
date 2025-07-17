@@ -7,7 +7,7 @@ import BotOutput from "./StructureComp/BotOutput";
 
   export default function Structure({ currentWidth, SetHome, aiModel }) {
      const messagesEndRef = useRef(null);
-     const {onSent, setInput, input, messages, setMessages, isTyping, loading} = useContext(Context);
+     const {onSent, setInput, input, messages, setMessages, isTyping, loading, setGlobeSpeed, setParticleSpeed, VISUAL_STATES} = useContext(Context);
        
        // whenever typing stops, scroll to bottom
         useEffect(() => {
@@ -15,6 +15,15 @@ import BotOutput from "./StructureComp/BotOutput";
             messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
           }
         }, [isTyping]);
+
+        // Add effect to handle loading state
+        useEffect(() => {
+          if (loading) {
+            // Set high speed during loading
+            setGlobeSpeed(VISUAL_STATES.PROCESSING.globe);
+            setParticleSpeed(VISUAL_STATES.PROCESSING.particle);
+          }
+        }, [loading, setGlobeSpeed, setParticleSpeed]);
 
 
       const handleSendMessage = async (customText = null) => {

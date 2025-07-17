@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { Context } from '../../context/Context';
 
 const Lightning = () => {
-   const {globeSpeed, isSpeaking} = useContext(Context);
+  const {globeSpeed, isSpeaking} = useContext(Context);
       
   const [lines, setLines] = useState([]);
   const [rings, setRings] = useState([]); // Add this at the beginning of your Lightning component
@@ -66,7 +66,8 @@ const Lightning = () => {
       axis: new THREE.Vector3(0.2, 0.5, 0.4),
       direction: Math.random() > 0.5 ? 1 : -1,
       color: lightningColors[Math.floor(Math.random() * lightningColors.length)],
-      rotationSpeed: Math.random() * globeSpeed + 0.01, // Dynamically adjust rotation speed
+      // Increase base rotation speed when processing
+      rotationSpeed: (Math.random() * globeSpeed + 0.01) * 1.5,
     }));
     setRings(newRings);
   }, [radius, numCircularRings, lightningColors, globeSpeed]); // Add globeSpeed as dependency

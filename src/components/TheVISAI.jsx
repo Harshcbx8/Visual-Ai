@@ -1,21 +1,20 @@
-import React, {useRef, useState, useEffect } from 'react';
+import React, {useRef, useState, useEffect, useContext } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import Lightning from './VISAI_Components/Lightning';
 import Particles from './VISAI_Components/Particles';
 import * as THREE from 'three';
-import { useContext } from 'react';
 import { Context } from '../context/Context';
 import WaveEffect from './VISAI_Components/WaveEffect';
 
 const Globe = ({animatedGlobeColors}) => {
-
+  const { globeSpeed } = useContext(Context);
   const globeRef = useRef();
 
-  // Rotate the globe continuously
+  // Adjust rotation speed based on globeSpeed
   useFrame(() => {
     if (globeRef.current) {
-      globeRef.current.rotation.y += 0.01;
+      globeRef.current.rotation.y += globeSpeed;
     }
   });
 
@@ -60,8 +59,10 @@ const TheVISAI = ({width}) => {
   const [position, setPosition] = useState({x: 100, y: 100});
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
+  const animationFrameRef = useRef(null);
+  const phaseRef = useRef(0);
 
-    // Animated Globe Color State
+  // Animated Globe Color State
   const [animatedGlobeColors, setAnimatedGlobeColors] = useState({
     color1: 'white',
     color2: 'aqua',
@@ -69,31 +70,56 @@ const TheVISAI = ({width}) => {
   });
 
   useEffect(() => {
+    const speed = 0.015; // Slightly slower for smoother transition
+
+    const animateColor = () => {
+      phaseRef.current += speed;
+      const wave = Math.sin(phaseRef.current) * 0.5 + 0.5;
+
+      setAnimatedGlobeColors({
+        color1: `hsl(${180 + wave * 30}, ${80 + wave * 20}%, ${70 + wave * 30}%)`,
+        color2: `hsl(${190 + wave * 20}, ${90 + wave * 10}%, ${50 + wave * 20}%)`,
+        color3: `hsl(${200 - wave * 20}, ${85 + wave * 15}%, ${40 + wave * 15}%)`,
+      });
+
+      if (isTyping) {
+        animationFrameRef.current = requestAnimationFrame(animateColor);
+      }
+    };
+
     if (isTyping) {
-      let phase = 0;
-      const speed = 0.02; // Speed of transition
-
-      const animateColor = () => {
-        phase += speed;
-        const wave = Math.sin(phase) * 0.5 + 0.5; // Generates smooth wave between 0 and 1
-
-        setAnimatedGlobeColors({
-          color1: `hsl(${180 + wave * 20}, 100%, ${50 + wave * 20}%)`, // Dynamic white-aqua transition
-          color2: `hsl(${180 + wave * 30}, 100%, ${40 + wave * 20}%)`, // Dynamic aqua-cyan transition
-          color3: `hsl(${180 - wave * 20}, 100%, ${30 + wave * 10}%)`, // Cyan variation
-        });
-
-        if (isTyping) requestAnimationFrame(animateColor);
-      };
-
       animateColor();
     } else {
-      setAnimatedGlobeColors({
-        color1: 'white',
-        color2: 'aqua',
-        color3: 'cyan',
-      });
+      // Smoothly transition back to default colors
+      const resetColors = () => {
+        phaseRef.current *= 0.95; // Gradually decrease phase
+        const wave = Math.sin(phaseRef.current) * 0.5 + 0.5;
+
+        if (phaseRef.current > 0.01) {
+          setAnimatedGlobeColors({
+            color1: `hsl(${180 + wave * 30}, ${80 + wave * 20}%, ${70 + wave * 30}%)`,
+            color2: `hsl(${190 + wave * 20}, ${90 + wave * 10}%, ${50 + wave * 20}%)`,
+            color3: `hsl(${200 - wave * 20}, ${85 + wave * 15}%, ${40 + wave * 15}%)`,
+          });
+          animationFrameRef.current = requestAnimationFrame(resetColors);
+        } else {
+          // Final reset to default colors
+          setAnimatedGlobeColors({
+            color1: 'white',
+            color2: 'aqua',
+            color3: 'cyan',
+          });
+        }
+      };
+      resetColors();
     }
+
+    // Cleanup function
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
   }, [isTyping]);
 
 
